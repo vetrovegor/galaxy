@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - ./user-ms-db:/var/lib/postgresql/data
-    restart: always
+    restart: unless-stopped
 
   product-ms-db:
     image: mongo
@@ -25,4 +25,16 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=root
     volumes:
       - ./product-ms-db:/data/db
-    restart: always
+    restart: unless-stopped
+
+  review-ms-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=product-ms-db
+    # убрать на продакшене
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./review-ms-db:/var/lib/mysql
+    restart: unless-stopped

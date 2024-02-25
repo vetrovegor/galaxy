@@ -9,6 +9,7 @@ import { join } from 'path';
 import { IsExistsConstraint } from '@shared/validation/is-exists.constraint';
 import { FileModule } from './file/file.module';
 import { AuthModule } from './auth/auth.module';
+import { ClientsModule } from '@nestjs/microservices';
 
 @Module({
   imports: [

@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Review {
+  id            Int              @id @default(autoincrement())
+  rate          Int
+  advantages    String
+  disadvantages String
+  comment       String
+  images        ReviewImage[]
+  date          DateTime         @default(now())
+  userId        String           @map("user_id")
+  productId     String           @map("product_id")
+  feedback      ReviewFeedBack[]
+  comments      ReviewComment[]
+
+  @@map("reviews")
+}
+
+model ReviewImage {
+  id       Int    @id @default(autoincrement())
+  url      String
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId Int    @map("review_id")
+
+  @@map("review_images")
+}
+
+enum reaction {
+  LIKE
+  DISLIKE
+}
+
+model ReviewFeedBack {
+  id       Int      @id @default(autoincrement())
+  reaction reaction
+  review   Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId Int      @map("review_id")
+  userId   String   @map("user_id")
+
+  @@map("review_feedback")
+}
+
+model ReviewComment {
+  id       Int    @id @default(autoincrement())
+  comment  String
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId Int    @map("review_id")
+  userId   String @map("user_id")
+
+  @@map("review_comments")
+}
