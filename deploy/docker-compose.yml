@@ -17,6 +17,7 @@ services:
   product-ms-db:
     image: mongo
     container_name: product-ms-db
+    # убрать на продакшене
     ports:
       - "27017:27017"
     environment:
