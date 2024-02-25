@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  galaxy-db:
+  user-ms-db:
     image: postgres:16
-    container_name: galaxy-db
+    container_name: user-ms-db
     # убрать на продакшене
     ports:
       - 5433:5432
@@ -11,5 +11,17 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./galaxy-db:/var/lib/postgresql/data
+      - ./user-ms-db:/var/lib/postgresql/data
+    restart: always
+
+  product-ms-db:
+    image: mongo
+    container_name: product-ms-db
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    volumes:
+      - ./product-ms-db:/data/db
     restart: always
