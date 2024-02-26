@@ -1,6 +1,14 @@
 version: '3'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: unless-stopped
+
   user-ms-db:
     image: postgres:16
     container_name: user-ms-db
@@ -19,7 +27,7 @@ services:
     container_name: product-ms-db
     # убрать на продакшене
     ports:
-      - "27017:27017"
+      - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=root
@@ -34,7 +42,7 @@ services:
       - MYSQL_DATABASE=product-ms-db
     # убрать на продакшене
     ports:
-      - '3306:3306'
+      - 3306:3306
     volumes:
       - ./review-ms-db:/var/lib/mysql
     restart: unless-stopped
