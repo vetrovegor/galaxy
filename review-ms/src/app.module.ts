@@ -14,7 +14,7 @@ import { FileModule } from './file/file.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '..', 'static'),
+      rootPath: path.join(process.cwd(), 'static'),
     }),
     PrismaModule,
     ReviewModule,
@@ -29,4 +29,4 @@ import { FileModule } from './file/file.module';
     }
   ]
 })
-export class AppModule {}
+export class AppModule { }

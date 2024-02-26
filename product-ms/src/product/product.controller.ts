@@ -5,6 +5,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from '@auth/roles.guard';
 import { Role } from '@auth/types';
 import { RolesGuard } from '@auth/roles.decorator';
+import { MessagePattern } from '@nestjs/microservices';
+import { GetProductRequest } from './dto/get-product-request.dto';
 
 @Controller('product')
 export class ProductController {
@@ -22,8 +24,8 @@ export class ProductController {
 
   // получение продукта по id
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.productService.findOne(id);
+  async getFullInfo(@Param('id') id: string) {
+    return await this.productService.getFullInfo(id);
   }
 
   @Roles(Role.ADMIN)
@@ -39,5 +41,10 @@ export class ProductController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return await this.productService.delete(id);
+  }
+
+  @MessagePattern('get_product')
+  async getById(data: GetProductRequest) {
+    return await this.productService.getById(data.productId);
   }
 }

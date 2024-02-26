@@ -11,6 +11,7 @@ export class ReviewController {
     private readonly reviewService: ReviewService
   ) { }
 
+  // сделать валидацию что images могут быть только картинками, размер файла
   @UseInterceptors(FilesInterceptor('images'))
   @Post()
   async create(

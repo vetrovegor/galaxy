@@ -51,7 +51,7 @@ export class ProductService {
         };
     }
 
-    async findOne(id: string) {
+    async getFullInfo(id: string) {
         const product = await this.productModel
             .findById(id)
             .populate('type', 'name')
@@ -100,5 +100,13 @@ export class ProductService {
         await this.productModel.deleteOne({ _id: id });
 
         return product;
+    }
+
+    async getById(id: string) {
+        try {
+            return await this.productModel.findById(id);
+        } catch (error) {
+            return null;
+        }
     }
 }

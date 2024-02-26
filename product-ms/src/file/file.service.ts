@@ -10,6 +10,8 @@ export class FileService {
 
             const staticPath = path.resolve(__dirname, '..', 'static');
 
+            console.log({staticPath});
+
             if (!fs.existsSync(staticPath)) {
                 fs.mkdirSync(staticPath, { recursive: true });
             }

@@ -8,7 +8,7 @@ export class FileService {
         try {
             const fileName = Date.now() + path.extname(file.originalname);
 
-            const staticPath = path.resolve(__dirname, '..', 'static');
+            const staticPath = path.resolve(process.cwd(), 'static');
 
             if (!fs.existsSync(staticPath)) {
                 fs.mkdirSync(staticPath, { recursive: true });

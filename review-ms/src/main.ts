@@ -2,14 +2,25 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
 
-  const comfigService = app.get(ConfigService);
+  const configService = app.get(ConfigService);
 
-  await app.listen(comfigService.get('PORT'));
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [`${configService.get('RNQ_URL')}`],
+      queue: 'review-queue',
+      queueOptions: { durable: false }
+    }
+  });
+
+  await app.startAllMicroservices();
+  await app.listen(configService.get('PORT'));
 }
 bootstrap();
