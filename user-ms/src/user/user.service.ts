@@ -13,7 +13,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>
-  ) {}
+  ) { }
 
   async findById(id: string) {
     return await this.userRepository.findOne({
@@ -61,5 +61,14 @@ export class UserService {
     user.isBanned = status;
 
     return await this.userRepository.save(user);
+  }
+
+  async getPreview(userId: string) {
+    const { id, email } = await this.findById(userId);
+
+    return {
+      id,
+      email
+    };
   }
 }

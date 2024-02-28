@@ -1,5 +1,5 @@
 import { Public } from '@auth/public.decorator';
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ReviewService } from 'src/review/review.service';
 
 @Controller('product')
@@ -9,8 +9,18 @@ export class ProductController {
     ) { }
 
     @Public()
-    @Get(':productId')
-    async getProductReviews(@Param('productId') productId: string) {
-        return 'public get route';
+    @Get(':productId/image')
+    async getProductReviewImages(@Param('productId') productId: number) {
+        return await this.reviewService.getImages(productId);
+    }
+
+    @Public()
+    @Get(':productId/review')
+    async getProductReviews(
+        @Param('productId') productId: string,
+        @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
+    ) {
+        return await this.reviewService.getReviews(productId, page, limit);
     }
 }

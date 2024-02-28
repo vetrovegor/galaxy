@@ -13,10 +13,12 @@ import { CurrentUser, Roles } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
 import { RolesGuard } from '@auth/guards/role.guard';
 import { Role } from './user.emtity';
+import { MessagePattern } from '@nestjs/microservices';
+import { GetUserRequestDTO } from './dto/get-user-request.dto';
 
 @Controller()
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
@@ -48,5 +50,10 @@ export class UserController {
             user.id,
             false
         );
+    }
+
+    @MessagePattern('get_user')
+    async getPreview(data: GetUserRequestDTO) {
+        return await this.userService.getPreview(data.userId);
     }
 }

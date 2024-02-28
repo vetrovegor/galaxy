@@ -48,11 +48,12 @@ model ReviewFeedBack {
 }
 
 model ReviewComment {
-  id       Int    @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   comment  String
-  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  reviewId Int    @map("review_id")
-  userId   String @map("user_id")
+  date     DateTime @default(now())
+  review   Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId Int      @map("review_id")
+  userId   String   @map("user_id")
 
   @@map("review_comments")
 }

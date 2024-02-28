@@ -42,6 +42,12 @@
       "@review/*": [
         "src/review//*"
       ],
+      "@comment": [
+        "src/comment/"
+      ],
+      "@comment/*": [
+        "src/comment//*"
+      ],
     }
   }
 }

@@ -9,6 +9,8 @@ import * as path from 'path'
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@auth/jwt-auth.guard';
 import { FileModule } from './file/file.module';
+import { FeedbackModule } from './feedback/feedback.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { FileModule } from './file/file.module';
     ProductModule,
     AuthModule,
     FileModule,
+    FeedbackModule,
+    CommentModule,
   ],
   providers: [
     {

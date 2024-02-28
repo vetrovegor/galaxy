@@ -1,7 +1,0 @@
-PORT=8083
-RNQ_URL=amqp://localhost:5672
-MYSQL_ROOT_PASSWORD=admin
-MYSQL_DATABASE=product-ms-db
-DATABASE_URL=mysql://root:admin@localhost:3306/product-ms-db
-API_URL=http://localhost:8080/api/v1/review-ms
-JWT_SECRET=secret
