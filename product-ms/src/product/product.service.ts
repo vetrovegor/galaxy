@@ -1,10 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './product.schema';
 import { Model } from 'mongoose';
 import { TypeService } from 'src/type/type.service';
-import { BrandService } from 'src/brand/brand.service';
 import { FileService } from '@file/file.service';
 import { ConfigService } from '@nestjs/config';
 
@@ -12,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 export class ProductService {
     constructor(
         @InjectModel(Product.name) private productModel: Model<Product>,
+        @Inject(forwardRef(() => TypeService))
         private typeService: TypeService,
         private fileService: FileService,
         private configService: ConfigService
@@ -108,5 +108,13 @@ export class ProductService {
         } catch (error) {
             return null;
         }
+    }
+
+    async getProductsCountByType(typeId: string) {
+        return await this.productModel.countDocuments({type: typeId}).exec();
+    }
+
+    async getProductsCountByBrand(brandId: string) {
+        return await this.productModel.countDocuments({brand: brandId}).exec();
     }
 }

@@ -1,12 +1,16 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Brand } from './brand.schema';
 import { Model } from 'mongoose';
 import { CreateBrandDTO } from './dto/create-brand.dto';
+import { ProductService } from '@product/product.service';
 
 @Injectable()
 export class BrandService {
-    constructor(@InjectModel(Brand.name) private brandModel: Model<Brand>) { }
+    constructor(
+        @InjectModel(Brand.name) private brandModel: Model<Brand>,
+        private productService: ProductService
+    ) { }
 
     async findAll() {
         return await this.brandModel.find().exec();
@@ -29,6 +33,12 @@ export class BrandService {
 
         if (!existedBrand) {
             throw new NotFoundException('Бренд не найден');
+        }
+
+        const productsCount = await this.productService.getProductsCountByBrand(brandId);
+
+        if (productsCount > 0) {
+            throw new ConflictException('Невозможно удалить бренд, так как существуют продукты с этим типом');
         }
 
         await this.brandModel.deleteOne({ _id: brandId });

@@ -11,16 +11,3 @@ export class Brand {
 }
 
 export const BrandSchema = SchemaFactory.createForClass(Brand);
-
-BrandSchema.pre('deleteOne', async function (next) {
-  const brandId = this.getQuery()._id;
-
-  const productModel = this.model.db.model(
-    'Product',
-    ProductSchema
-  );
-
-  await productModel.deleteMany({ brand: brandId });
-
-  next();
-});

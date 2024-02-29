@@ -3,7 +3,7 @@ import { Transform, Type } from "class-transformer";
 import { IsExists } from "@shared/validation/is-exists.decorator";
 import { IsObjectId } from "@shared/validation/is-object-id.decorator";
 
-class CharacteristicDto {
+export class CharacteristicDto {
     @IsString()
     characteristic: string;
 

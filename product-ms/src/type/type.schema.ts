@@ -14,16 +14,3 @@ export class Type {
 }
 
 export const TypeSchema = SchemaFactory.createForClass(Type);
-
-TypeSchema.pre('deleteOne', async function (next) {
-  const typeId = this.getQuery()._id;
-
-  const productModel = this.model.db.model(
-    'Product',
-    ProductSchema
-  );
-
-  await productModel.deleteMany({ type: typeId });
-
-  next();
-});

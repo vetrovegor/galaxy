@@ -1,14 +1,17 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Type } from './type.schema';
 import { Model } from 'mongoose';
 import { CreateTypeDTO } from './dto/create-type.dto';
 import { ProductService } from '@product/product.service';
+import { CharacteristicDto } from '@product/dto/create-product.dto';
 
 @Injectable()
 export class TypeService {
     constructor(
-        @InjectModel(Type.name) private typeModel: Model<Type>
+        @InjectModel(Type.name) private typeModel: Model<Type>,
+        @Inject(forwardRef(() => ProductService))
+        private productService: ProductService
     ) { }
 
     async findAll() {
@@ -27,14 +30,20 @@ export class TypeService {
         return await createdBrand.save();
     }
 
-    async delete(brandId: string) {
-        const existedType = await this.typeModel.findById(brandId).exec();
+    async delete(typeId: string) {
+        const existedType = await this.typeModel.findById(typeId).exec();
 
         if (!existedType) {
             throw new NotFoundException('Тип не найден');
         }
 
-        await this.typeModel.deleteOne({ _id: brandId });
+        const productsCount = await this.productService.getProductsCountByType(typeId);
+
+        if (productsCount > 0) {
+            throw new ConflictException('Невозможно удалить тип, так как существуют продукты с этим типом');
+        }
+
+        await this.typeModel.deleteOne({ _id: typeId });
 
         return existedType;
     }
