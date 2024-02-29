@@ -5,7 +5,7 @@ import {
     UnauthorizedException
 } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
-import { AuthDTO } from './dto/register-user.dto';
+import { RegisterDTO } from './dto/register-user.dto';
 import { compareSync, hashSync } from 'bcrypt';
 import { CodeService } from '@code/code.service';
 import { JwtService } from '@nestjs/jwt';
@@ -16,6 +16,7 @@ import { MoreThan, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { addDays } from 'date-fns';
 import { MailService } from '@mail/mail.service';
+import { LoginDTO } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -28,20 +29,21 @@ export class AuthService {
         private tokenRepository: Repository<Token>
     ) {}
 
-    async register(dto: AuthDTO, userAgent: string) {
-        const { email, password } = dto;
+    async register(dto: RegisterDTO, userAgent: string) {
+        const { email, nickname, password } = dto;
 
-        const existedUser = await this.userService.findByEmail(email);
+        const existedUser = await this.userService.findByEmailOrNickname(nickname, email);
 
         if (existedUser) {
             throw new ConflictException(
-                'Пользователь с таким email уже существует'
+                'Пользователь уже существует'
             );
         }
 
         const hashedPassword = hashSync(password, 3);
 
         const user = await this.userService.createUser({
+            nickname,
             email,
             password: hashedPassword
         });
@@ -62,10 +64,14 @@ export class AuthService {
         };
     }
 
-    async login(dto: AuthDTO, userAgent: string) {
-        const { email, password } = dto;
+    async login(dto: LoginDTO, userAgent: string) {
+        const { nickname, password } = dto;
 
-        const existedUser = await this.userService.findByEmail(email);
+        console.log({dto});
+
+        const existedUser = await this.userService.findByEmailOrNickname(nickname);
+
+        console.log({existedUser});
 
         if (!existedUser || !compareSync(password, existedUser.password)) {
             throw new UnauthorizedException('Неверная почта или пароль');
@@ -109,12 +115,14 @@ export class AuthService {
     }
 
     async generateTokens(user: User, userAgent: string) {
-        const { id, email, roles } = user;
+        const { id, nickname, email, roles, isBanned } = user;
 
         const accessToken = this.jwtService.sign({
             id,
+            nickname,
             email,
-            roles
+            roles,
+            isBanned
         });
         const refreshToken = v4();
 

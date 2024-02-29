@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { AuthDTO } from "../auth/dto/register-user.dto";
+import { RegisterDTO } from "../auth/dto/register-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Role, User } from "./user.emtity";
 import { Repository } from "typeorm";
@@ -23,15 +23,16 @@ export class UserService {
     });
   }
 
-  async findByEmail(email: string) {
+  async findByEmailOrNickname(nickname: string, email?: string) {
     return await this.userRepository.findOne({
-      where: {
-        email,
-      },
+      where: [
+        { nickname },
+        { email }
+      ],
     });
   }
 
-  async createUser(dto: AuthDTO) {
+  async createUser(dto: RegisterDTO) {
     const user = this.userRepository.create(dto);
     return await this.userRepository.save(user);
   }
@@ -64,11 +65,11 @@ export class UserService {
   }
 
   async getPreview(userId: string) {
-    const { id, email } = await this.findById(userId);
+    const { id, nickname } = await this.findById(userId);
 
     return {
       id,
-      email
+      nickname
     };
   }
 }

@@ -1,6 +1,6 @@
 import { IsEmail, IsString, Length } from 'class-validator';
 
-export class RegisterDTO {
+export class LoginDTO {
     @IsString({
         message: 'Никнейм должен быть строкой'
     })
@@ -8,9 +8,6 @@ export class RegisterDTO {
         message: 'Никнейм должен быть от 3 до 24 символов'
     })
     nickname: string;
-
-    @IsEmail({}, { message: 'Некорректный email' })
-    email: string;
 
     @IsString({
         message: 'Пароль должен быть строкой'

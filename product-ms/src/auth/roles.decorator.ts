@@ -39,6 +39,10 @@ export class RolesGuard implements CanActivate {
 
             const user: JwtPayload = this.jwtService.verify(token);
 
+            if (user.isBanned) {
+                throw new ForbiddenException();
+            }
+
             return user.roles.some(role => requiredRoles.includes(role));
         } catch (error) {
             throw new ForbiddenException();

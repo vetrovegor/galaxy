@@ -54,6 +54,8 @@ export class UserController {
 
     @MessagePattern('get_user')
     async getPreview(data: GetUserRequestDTO) {
+        console.log(data.userId);
+        
         return await this.userService.getPreview(data.userId);
     }
 }

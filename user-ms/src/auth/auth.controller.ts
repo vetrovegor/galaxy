@@ -8,11 +8,12 @@ import {
     Post,
     Res
 } from '@nestjs/common';
-import { AuthDTO as AuthDTO } from './dto/register-user.dto';
+import { RegisterDTO as RegisterDTO } from './dto/register-user.dto';
 import { AuthService } from './auth.service';
 import { Cookie, Public, UserAgent } from '@common/decorators';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { LoginDTO } from './dto/login-user.dto';
 
 const REFRESH_TOKEN = 'refresh-token';
 
@@ -27,7 +28,7 @@ export class AuthController {
     @Post('register')
     async register(
         @Body()
-        dto: AuthDTO,
+        dto: RegisterDTO,
         @UserAgent()
         userAgent: string,
         @Res()
@@ -50,7 +51,7 @@ export class AuthController {
     @Post('login')
     async login(
         @Body()
-        dto: AuthDTO,
+        dto: LoginDTO,
         @UserAgent()
         userAgent: string,
         @Res()

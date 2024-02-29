@@ -5,6 +5,8 @@ export interface Tokens {
 
 export interface JwtPayload {
     id: string;
+    nickname: string;
     email: string;
     roles: string[];
+    isBanned: boolean;
 }
