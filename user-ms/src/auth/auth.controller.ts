@@ -14,16 +14,20 @@ import { Cookie, Public, UserAgent } from '@common/decorators';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { LoginDTO } from './dto/login-user.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthResponse } from './dto/auth-response.dto';
+import { RefreshResponse } from './dto/refresh-response.dto';
 
 const REFRESH_TOKEN = 'refresh-token';
 
 @Public()
+@ApiTags('Authorization')
 @Controller('auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly configService: ConfigService
-    ) {}
+    ) { }
 
     @Post('register')
     async register(
@@ -33,7 +37,7 @@ export class AuthController {
         userAgent: string,
         @Res()
         res: Response
-    ) {
+    ): Promise<AuthResponse> {
         const { user, accessToken, refreshToken } =
             await this.authService.register(dto, userAgent);
 
@@ -42,10 +46,10 @@ export class AuthController {
             httpOnly: true
         });
 
-        res.json({
+        return {
             user,
             accessToken
-        });
+        };
     }
 
     @Post('login')
@@ -56,7 +60,7 @@ export class AuthController {
         userAgent: string,
         @Res()
         res: Response
-    ) {
+    ): Promise<AuthResponse> {
         const { user, accessToken, refreshToken } =
             await this.authService.login(dto, userAgent);
 
@@ -65,10 +69,10 @@ export class AuthController {
             httpOnly: true
         });
 
-        res.json({
+        return {
             user,
             accessToken
-        });
+        };
     }
 
     @Get('verify/:code')
@@ -91,7 +95,7 @@ export class AuthController {
         userAgent: string,
         @Res()
         res: Response
-    ) {
+    ): Promise<RefreshResponse> {
         const tokens = await this.authService.refresh(refreshToken, userAgent);
 
         res.cookie(REFRESH_TOKEN, tokens.refreshToken, {
@@ -99,9 +103,9 @@ export class AuthController {
             httpOnly: true
         });
 
-        res.json({
+        return {
             accessToken: tokens.accessToken
-        });
+        };
     }
 
     @Get('logout')
@@ -115,6 +119,6 @@ export class AuthController {
 
         res.clearCookie(REFRESH_TOKEN);
 
-        res.sendStatus(HttpStatus.OK);
+        return HttpStatus.OK;
     }
 }

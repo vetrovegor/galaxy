@@ -7,7 +7,11 @@ import { Role } from '@auth/types';
 import { RolesGuard } from '@auth/roles.decorator';
 import { MessagePattern } from '@nestjs/microservices';
 import { GetProductRequest } from './dto/get-product-request.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Product } from './product.schema';
 
+@ApiTags('Products')
+@ApiBearerAuth()
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
@@ -22,7 +26,6 @@ export class ProductController {
     return await this.productService.findAll(page, limit, type, brand);
   }
 
-  // получение продукта по id
   @Get(':id')
   async getFullInfo(@Param('id') id: string) {
     return await this.productService.getFullInfo(id);
@@ -32,14 +35,17 @@ export class ProductController {
   @UseGuards(RolesGuard)
   @Post()
   @UseInterceptors(FileInterceptor('picture'))
-  async create(@Body() dto: CreateProductDTO, @UploadedFile() picture: Express.Multer.File) {
+  async create(
+    @Body() dto: CreateProductDTO,
+    @UploadedFile() picture: Express.Multer.File
+  ): Promise<Product> {
     return await this.productService.create(dto, picture);
   }
 
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string): Promise<Product> {
     return await this.productService.delete(id);
   }
 

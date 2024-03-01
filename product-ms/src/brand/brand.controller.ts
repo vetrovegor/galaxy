@@ -4,27 +4,31 @@ import { CreateBrandDTO } from './dto/create-brand.dto';
 import { Roles } from '@auth/roles.guard';
 import { RolesGuard } from '@auth/roles.decorator';
 import { Role } from '@auth/types';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Brand } from './brand.schema';
 
+@ApiTags('Brands')
+@ApiBearerAuth()
 @Controller('brand')
 export class BrandController {
   constructor(private readonly brandService: BrandService) { }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<Brand[]> {
     return await this.brandService.findAll();
   }
 
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Post()
-  async create(@Body() dto: CreateBrandDTO) {
+  async create(@Body() dto: CreateBrandDTO): Promise<Brand> {
     return await this.brandService.create(dto);
   }
 
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Delete(':brandId')
-  async delete(@Param('brandId') brandId: string) {
+  async delete(@Param('brandId') brandId: string): Promise<Brand> {
     return await this.brandService.delete(brandId);
   }
 }

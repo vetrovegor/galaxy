@@ -50,7 +50,7 @@ export class AuthService {
 
         const code = await this.codeService.createVerificationCode(user);
 
-        await this.mailService.sendVerificationMail(email, code);
+        this.mailService.sendVerificationMail(email, code);
 
         const { accessToken, refreshToken } = await this.generateTokens(
             user,

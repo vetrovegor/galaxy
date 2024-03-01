@@ -4,27 +4,31 @@ import { CreateTypeDTO } from './dto/create-type.dto';
 import { Roles } from '@auth/roles.guard';
 import { Role } from '@auth/types';
 import { RolesGuard } from '@auth/roles.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Type } from './type.schema';
 
+@ApiTags('Types')
+@ApiBearerAuth()
 @Controller('type')
 export class TypeController {
   constructor(private readonly typeService: TypeService) {}
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<Type[]> {
     return await this.typeService.findAll();
   }
 
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Post()
-  async create(@Body() dto: CreateTypeDTO) {
+  async create(@Body() dto: CreateTypeDTO): Promise<Type> {
     return await this.typeService.create(dto);
   }
 
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Delete(':typeId')
-  async delete(@Param('typeId') typeId: string) {
+  async delete(@Param('typeId') typeId: string): Promise<Type>  {
     return await this.typeService.delete(typeId);
   }
 }

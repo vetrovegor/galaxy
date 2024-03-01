@@ -3,7 +3,9 @@ import { AddressService } from "./address.service";
 import { CreateAddressDTO } from "./dto/create-address.dto";
 import { CurrentUser } from "@common/decorators";
 import { JwtPayload } from "@auth/interfaces";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Addresses')
 @Controller("address")
 export class AddressController {
     constructor(private readonly addressService: AddressService) { }

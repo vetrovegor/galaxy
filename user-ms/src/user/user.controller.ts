@@ -15,7 +15,10 @@ import { RolesGuard } from '@auth/guards/role.guard';
 import { Role } from './user.emtity';
 import { MessagePattern } from '@nestjs/microservices';
 import { GetUserRequestDTO } from './dto/get-user-request.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller()
 export class UserController {
     constructor(private readonly userService: UserService) { }

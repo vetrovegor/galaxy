@@ -1,6 +1,10 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, Length } from 'class-validator';
 
 export class LoginDTO {
+    @ApiProperty({
+        example: 'l4ndar'
+    })
     @IsString({
         message: 'Никнейм должен быть строкой'
     })
@@ -9,6 +13,9 @@ export class LoginDTO {
     })
     nickname: string;
 
+    @ApiProperty({
+        example: '12345678'
+    })
     @IsString({
         message: 'Пароль должен быть строкой'
     })
