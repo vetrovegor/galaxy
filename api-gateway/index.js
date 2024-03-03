@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 8080;
 app.use('/api/v1/user-ms', proxy(process.env.USER_MS_URL));
 app.use('/api/v1/product-ms', proxy(process.env.PRODUCT_MS_URL));
 app.use('/api/v1/review-ms', proxy(process.env.REVIEW_MS_URL));
+app.use('/api/v1/shopping-ms', proxy(process.env.SHOPPING_MS_URL));
 
 const options = {
     definition: {

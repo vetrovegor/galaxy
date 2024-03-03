@@ -1,6 +1,7 @@
 import {
     Controller,
     Delete,
+    Get,
     HttpStatus,
     Param,
     ParseUUIDPipe,
@@ -22,6 +23,14 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @Controller()
 export class UserController {
     constructor(private readonly userService: UserService) { }
+
+    // сделать пагинацию
+    @UseGuards(RolesGuard)
+    @Roles(Role.ADMIN)
+    @Get()
+    async findAll() {
+        return await this.userService.findAll();
+    }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)

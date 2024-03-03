@@ -46,6 +46,12 @@ export class AuthController {
             httpOnly: true
         });
 
+        res.json({
+            user,
+            accessToken
+        })
+
+        // убрать
         return {
             user,
             accessToken
@@ -69,6 +75,12 @@ export class AuthController {
             httpOnly: true
         });
 
+        res.json({
+            user,
+            accessToken
+        })
+
+        // убрать
         return {
             user,
             accessToken

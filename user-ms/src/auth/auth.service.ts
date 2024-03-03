@@ -67,8 +67,6 @@ export class AuthService {
     async login(dto: LoginDTO, userAgent: string) {
         const { nickname, password } = dto;
 
-        console.log({dto});
-
         const existedUser = await this.userService.findByEmailOrNickname(nickname);
 
         console.log({existedUser});

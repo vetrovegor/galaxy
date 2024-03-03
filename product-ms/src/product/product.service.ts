@@ -34,7 +34,7 @@ export class ProductService {
             .limit(limit)
             .select('-characteristics')
             .select('-type')
-            .populate('brand', 'name')
+            .select('-brand')
             .exec();
 
         return {
@@ -45,8 +45,7 @@ export class ProductService {
                 _id: product._id,
                 model: product.model,
                 price: product.price,
-                picture: `${this.configService.get('API_URL')}/${product.picture}`,
-                brand: product.brand
+                picture: `${this.configService.get('API_URL')}/${product.picture}`
             }))
         };
     }
@@ -104,17 +103,29 @@ export class ProductService {
 
     async getById(id: string) {
         try {
-            return await this.productModel.findById(id);
+            const { _id, model, price, picture, brand } = await this.productModel
+                .findById(id)
+                .select('-characteristics')
+                .select('-type')
+                .select('-brand')
+                .exec();;
+
+            return {
+                _id,
+                model,
+                price,
+                picture: `${this.configService.get('API_URL')}/${picture}`
+            };
         } catch (error) {
             return null;
         }
     }
 
     async getProductsCountByType(typeId: string) {
-        return await this.productModel.countDocuments({type: typeId}).exec();
+        return await this.productModel.countDocuments({ type: typeId }).exec();
     }
 
     async getProductsCountByBrand(brandId: string) {
-        return await this.productModel.countDocuments({brand: brandId}).exec();
+        return await this.productModel.countDocuments({ brand: brandId }).exec();
     }
 }

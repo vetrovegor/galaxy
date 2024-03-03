@@ -37,6 +37,7 @@ services:
 
   review-ms-db:
     image: mysql
+    container_name:  review-ms-db
     environment:
       - MYSQL_ROOT_PASSWORD=admin
       - MYSQL_DATABASE=product-ms-db
@@ -45,4 +46,17 @@ services:
       - 3306:3306
     volumes:
       - ./review-ms-db:/var/lib/mysql
+    restart: unless-stopped
+
+  shoppng-ms-db:
+    image: mariadb
+    container_name: shoppng-ms-db
+    environment:
+      - MARIADB_DATABASE=shoppng-ms-db
+      - MARIADB_ROOT_PASSWORD=root
+    # убрать на продакшене
+    ports:
+      - 3307:3306
+    volumes:
+      - ./shoppng-ms-db:/var/lib/mysql
     restart: unless-stopped
