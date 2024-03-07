@@ -42,6 +42,18 @@
       "@basket/*": [
         "src/basket//*"
       ],
+      "@order": [
+        "src/order/"
+      ],
+      "@order/*": [
+        "src/order//*"
+      ],
+      "@order-product": [
+        "src/order-product/"
+      ],
+      "@order-product/*": [
+        "src/order-product//*"
+      ],
     }
   }
 }

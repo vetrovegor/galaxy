@@ -50,18 +50,35 @@ export class BasketService {
             where: { userId }
         });
 
-        const basket = await Promise.all(
+        let productsQuantity = 0;
+        let totalSum = 0;
+
+        const products = await Promise.all(
             basketItems.map(async ({ id, quantity, productId }) => {
                 const product = await this.productService.findById(productId);
 
+                productsQuantity += quantity;
+                totalSum += product.price * quantity;
+
                 return {
-                    id,
-                    product,
+                    ...product,
                     quantity
                 };
             })
         );
 
-        return { basket };
+        return { products, productsQuantity, totalSum };
+    }
+
+    async getCount(userId: string) {
+        return await this.basketModel.count({
+            where: { userId }
+        });
+    }
+
+    async delete(userId: string) {
+        return await this.basketModel.destroy({
+            where: { userId }
+        });
     }
 }

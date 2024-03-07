@@ -12,5 +12,6 @@ import { ProductModule } from '@product/product.module';
   ],
   controllers: [BasketController],
   providers: [BasketService],
+  exports: [BasketService],
 })
 export class BasketModule { }

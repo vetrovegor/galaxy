@@ -69,8 +69,6 @@ export class AuthService {
 
         const existedUser = await this.userService.findByEmailOrNickname(nickname);
 
-        console.log({existedUser});
-
         if (!existedUser || !compareSync(password, existedUser.password)) {
             throw new UnauthorizedException('Неверная почта или пароль');
         }
