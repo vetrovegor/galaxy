@@ -34,6 +34,12 @@ export class FavoriteService {
             where: { userId }
         });
 
-        return { favorites };
+        const products = await Promise.all(
+            favorites.map(async ({ productId }) => {
+                return await this.productService.findById(productId);
+            })
+        );
+
+        return { products };
     }
 }

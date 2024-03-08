@@ -31,13 +31,10 @@ export class AuthController {
 
     @Post('register')
     async register(
-        @Body()
-        dto: RegisterDTO,
-        @UserAgent()
-        userAgent: string,
-        @Res()
-        res: Response
-    ): Promise<AuthResponse> {
+        @Body() dto: RegisterDTO,
+        @UserAgent() userAgent: string,
+        @Res() res: Response
+    ) {
         const { user, accessToken, refreshToken } =
             await this.authService.register(dto, userAgent);
 
@@ -50,12 +47,6 @@ export class AuthController {
             user,
             accessToken
         })
-
-        // убрать
-        return {
-            user,
-            accessToken
-        };
     }
 
     @Post('login')
@@ -66,7 +57,7 @@ export class AuthController {
         userAgent: string,
         @Res()
         res: Response
-    ): Promise<AuthResponse> {
+    ) {
         const { user, accessToken, refreshToken } =
             await this.authService.login(dto, userAgent);
 
@@ -79,12 +70,6 @@ export class AuthController {
             user,
             accessToken
         })
-
-        // убрать
-        return {
-            user,
-            accessToken
-        };
     }
 
     @Get('verify/:code')
@@ -131,6 +116,6 @@ export class AuthController {
 
         res.clearCookie(REFRESH_TOKEN);
 
-        return HttpStatus.OK;
+        res.sendStatus(HttpStatus.OK);
     }
 }

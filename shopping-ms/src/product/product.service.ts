@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { ProductDto } from './dto/product.dto';
 
 @Injectable()
 export class ProductService {
@@ -9,7 +10,7 @@ export class ProductService {
     ) { }
 
     async findById(productId: string) {
-        const product = await firstValueFrom(
+        const product: ProductDto = await firstValueFrom(
             this.productClient.send('get_product', { productId })
         );
 

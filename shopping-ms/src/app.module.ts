@@ -9,11 +9,16 @@ import { ProductModule } from './product/product.module';
 import { BasketModule } from '@basket/basket.module';
 import { OrderModule } from './order/order.module';
 import { OrderProductModule } from './order-product/order-product.module';
+import * as path from 'path'
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports:
     [
       ConfigModule.forRoot({ isGlobal: true }),
+      ServeStaticModule.forRoot({
+        rootPath: path.join(process.cwd(), 'static'),
+      }),
       DatabaseModule,
       AuthModule,
       FavoriteModule,

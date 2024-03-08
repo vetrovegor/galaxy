@@ -9,6 +9,12 @@ export class ProductController {
     ) { }
 
     @Public()
+    @Get(':productId/stats')
+    async getProductReviewStats(@Param('productId') productId: string) {
+        return await this.reviewService.getStats(productId);
+    }
+
+    @Public()
     @Get(':productId/image')
     async getProductReviewImages(@Param('productId') productId: number) {
         return await this.reviewService.getImages(productId);

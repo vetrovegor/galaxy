@@ -27,7 +27,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         @InjectRepository(Token)
         private tokenRepository: Repository<Token>
-    ) {}
+    ) { }
 
     async register(dto: RegisterDTO, userAgent: string) {
         const { email, nickname, password } = dto;
@@ -42,20 +42,22 @@ export class AuthService {
 
         const hashedPassword = hashSync(password, 3);
 
-        const user = await this.userService.createUser({
+        const createdUser = await this.userService.createUser({
             nickname,
             email,
             password: hashedPassword
         });
 
-        const code = await this.codeService.createVerificationCode(user);
+        const code = await this.codeService.createVerificationCode(createdUser);
 
         this.mailService.sendVerificationMail(email, code);
 
         const { accessToken, refreshToken } = await this.generateTokens(
-            user,
+            createdUser,
             userAgent
         );
+
+        const { password: userPassword, ...user } = createdUser;
 
         return {
             user,
@@ -78,8 +80,10 @@ export class AuthService {
             userAgent
         );
 
+        const { password: userPassword, ...user } = existedUser;
+
         return {
-            user: existedUser,
+            user,
             accessToken,
             refreshToken
         };

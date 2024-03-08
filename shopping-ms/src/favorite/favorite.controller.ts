@@ -7,9 +7,6 @@ import { JwtPayload } from '@auth/types';
 @Controller('favorite')
 export class FavoriteController {
   constructor(private readonly favoriteService: FavoriteService) { }
-
-  // запрос товаров из избранного
-
   @Post()
   async toggle(@Body() dto: ToggleFavoriteDto, @CurrentUser() user: JwtPayload) {
     return await this.favoriteService.toggle(dto, user.id);

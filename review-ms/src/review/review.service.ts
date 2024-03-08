@@ -72,6 +72,34 @@ export class ReviewService {
         };
     }
 
+    async getStats(productId: string) {
+        const existedProduct = await firstValueFrom(
+            this.productClient.send('get_product', { productId })
+        );
+
+        if (!existedProduct) {
+            throw new NotFoundException('Продукт не найден');
+        }
+
+        const avgRating = await this.prismaService.review.aggregate({
+            _avg: {
+                rate: true
+            }
+        });
+
+        const reviewsCount = await this.prismaService.review.count({
+            where: { productId }
+        });
+
+        return {
+            stats: {
+                productId,
+                avgRating: avgRating._avg.rate,
+                reviewsCount
+            }
+        };
+    }
+
     async getReviews(productId: string, page: number, limit: number) {
         const existedProduct = await firstValueFrom(
             this.productClient.send('get_product', { productId })

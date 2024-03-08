@@ -13,10 +13,10 @@ export class OrderProduct extends Model {
     picture: string;
 
     @Column
-    price: string;
+    price: number;
 
     @Column
-    quantity: string;
+    quantity: number;
 
     @Column({ field: 'product_id' })
     productId: string;

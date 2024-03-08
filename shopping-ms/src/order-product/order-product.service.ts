@@ -56,4 +56,61 @@ export class OrderProductService {
       totalPictures: pictures.length
     };
   }
+
+  async getShortInfo(orderId: number) {
+    const orderProducts = await this.orderProductModel.findAll({
+      where: { orderId }
+    });
+
+    let totalSum = 0;
+    const pictures = [];
+
+    for (const orderProduct of orderProducts) {
+      const { picture, price, quantity } = orderProduct;
+
+      totalSum += price * quantity;
+
+      pictures.push({
+        id: pictures.length + 1,
+        picture: `${this.configService.get('API_URL')}/${picture}`
+      });
+    }
+
+    return {
+      totalSum,
+      pictures: pictures.slice(0, 5),
+      totalPictures: pictures.length
+    };
+  }
+
+  async getFullInfo(orderId: number) {
+    const orderProducts = await this.orderProductModel.findAll({
+      where: { orderId }
+    });
+
+    const products = [];
+    let totalSum = 0;
+    let productsQuantity = 0;
+
+    for (const orderProduct of orderProducts) {
+      const { productId, model, picture, price, quantity } = orderProduct;
+
+      products.push({
+        id: productId,
+        model,
+        picture: `${this.configService.get('API_URL')}/${picture}`,
+        price,
+        quantity
+      });
+
+      totalSum += price * quantity;
+      productsQuantity += quantity;
+    }
+
+    return {
+      products,
+      totalSum,
+      productsQuantity
+    };
+  }
 }

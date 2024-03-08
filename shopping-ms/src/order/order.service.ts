@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Order } from './order.entity';
 import { OrderProductService } from '@order-product/order-product.service';
 import { BasketService } from '@basket/basket.service';
+import { AddressDto } from './dto/address.dto';
 
 @Injectable()
 export class OrderService {
@@ -16,22 +17,54 @@ export class OrderService {
         private readonly orderProductService: OrderProductService
     ) { }
 
-    // доработать
-    async get(userId: string) {
-        const orders = await this.orderModel.findAll({
+    async getAll(userId: string) {
+        const ordersData = await this.orderModel.findAll({
             where: { userId },
             order: [['date', 'DESC']]
         });
 
-        return await Promise.all(
-            orders.map(({ id, tracking, date }) => {
+        const orders = await Promise.all(
+            ordersData.map(async ({ id, tracking, date }) => {
+                const data = await this.orderProductService.getShortInfo(id);
+
                 return {
                     id,
                     tracking,
-                    date: this.formatDate(date)
+                    date,
+                    ...data
                 };
             })
         );
+
+        return { orders };
+    }
+
+    async getById(orderId: number, userId: string) {
+        const order = await this.orderModel.findOne({
+            where: { id: orderId, userId }
+        });
+
+        if (!order) {
+            throw new NotFoundException('Заказ не найден');
+        }
+
+        const { id, tracking, date, street, floor, flat } = order;
+
+        const data = await this.orderProductService.getFullInfo(orderId);
+
+        return {
+            order: {
+                id,
+                tracking,
+                date,
+                ...data,
+                address: {
+                    street,
+                    floor,
+                    flat
+                }
+            }
+        };
     }
 
     async create({ addressId }: CreateOrderDto, userId: string) {
@@ -41,13 +74,15 @@ export class OrderService {
             throw new BadRequestException('Корзина пуста');
         }
 
-        const address = await firstValueFrom(
+        const address: AddressDto = await firstValueFrom(
             this.userClient.send('get_user_address', { userId, addressId })
         );
 
         if (!address) {
             throw new NotFoundException('Адрес не найден');
         }
+
+        const { street, floor, flat } = address;
 
         const currentDate = new Date();
         const randomNumber = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;;
@@ -57,7 +92,9 @@ export class OrderService {
             tracking,
             date: currentDate,
             userId,
-            addressId
+            street,
+            floor,
+            flat
         });
 
         const { totalSum, pictures, totalPictures } = await this.orderProductService.create(order.id, userId);
@@ -65,24 +102,10 @@ export class OrderService {
         return {
             id: order.id,
             tracking,
-            date: this.formatDate(currentDate),
+            date: currentDate,
             totalSum,
             pictures,
             totalPictures
         };
-    }
-
-    // вынести в shared
-    private formatDate(date: Date) {
-        const months = [
-            "января", "февраля", "марта", "апреля", "мая", "июня",
-            "июля", "августа", "сентября", "октября", "ноября", "декабря"
-        ];
-
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
-
-        return `${day} ${month} ${year}`;
     }
 }

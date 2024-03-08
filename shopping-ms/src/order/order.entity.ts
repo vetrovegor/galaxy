@@ -15,8 +15,14 @@ export class Order extends Model {
     @Column({ field: 'user_id' })
     userId: string;
 
-    @Column({ field: 'address_id' })
-    addressId: string;
+    @Column
+    street: string;
+
+    @Column
+    floor: number;
+
+    @Column
+    flat: number;
 
     @HasMany(() => OrderProduct)
     products: OrderProduct[]

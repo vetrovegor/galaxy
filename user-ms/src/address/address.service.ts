@@ -24,26 +24,28 @@ export class AddressService {
     }
 
     async create(dto: CreateAddressDTO, userId: string) {
-        const user = await this.userService.findById(userId);
+        const existedUser = await this.userService.findById(userId);
 
-        const address = this.addressRepository.create({ ...dto, user });
+        const createdAddress = this.addressRepository.create({ ...dto, user: existedUser });
 
-        return await this.addressRepository.save(address);
+        const { user, ...address } = await this.addressRepository.save(createdAddress);
+
+        return address;
     }
 
     async delete(id: string, userId: string) {
         const address = await this.addressRepository.findOne({
             where: {
                 id,
-            },
-            relations: ['user']
+                user: { id: userId }
+            }
         });
 
-        if (!address || address.user.id != userId) {
-            throw new NotFoundException("Адрес не найден");
+        if (!address) {
+            throw new NotFoundException('Адрес не найден');
         }
 
-        await this.addressRepository.delete(address);
+        await this.addressRepository.delete(id);
 
         return address;
     }
