@@ -24,6 +24,11 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
+    @Get('me')
+    async me(@CurrentUser() user: JwtPayload) {
+        return await this.userService.me(user.id);
+    }
+
     // сделать пагинацию
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)

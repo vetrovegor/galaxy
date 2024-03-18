@@ -92,7 +92,7 @@ export class AuthController {
         userAgent: string,
         @Res()
         res: Response
-    ): Promise<RefreshResponse> {
+    ) {
         const tokens = await this.authService.refresh(refreshToken, userAgent);
 
         res.cookie(REFRESH_TOKEN, tokens.refreshToken, {
@@ -100,9 +100,7 @@ export class AuthController {
             httpOnly: true
         });
 
-        return {
-            accessToken: tokens.accessToken
-        };
+        res.json({ accessToken: tokens.accessToken })
     }
 
     @Get('logout')

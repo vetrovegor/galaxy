@@ -15,6 +15,14 @@ export class UserService {
     private userRepository: Repository<User>
   ) { }
 
+  async me(id: string) {
+    const user = await this.findById(id);
+
+    delete user.password;
+
+    return { user };
+  }
+
   async findAll() {
     return await this.userRepository.find();
   }
