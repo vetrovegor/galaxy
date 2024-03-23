@@ -48,9 +48,7 @@ export class AuthService {
             password: hashedPassword
         });
 
-        const code = await this.codeService.createVerificationCode(createdUser);
-
-        this.mailService.sendVerificationMail(email, code);
+        this.mailService.sendVerificationMail(createdUser);
 
         const { accessToken, refreshToken } = await this.generateTokens(
             createdUser,
@@ -115,12 +113,13 @@ export class AuthService {
     }
 
     async generateTokens(user: User, userAgent: string) {
-        const { id, nickname, email, roles, isBanned } = user;
+        const { id, nickname, email, isVerified, roles, isBanned } = user;
 
         const accessToken = this.jwtService.sign({
             id,
             nickname,
             email,
+            isVerified,
             roles,
             isBanned
         });
@@ -163,9 +162,11 @@ export class AuthService {
         const codeData = await this.codeService.validateVerificationCode(code);
 
         if (!codeData) {
-            throw new BadRequestException();
+            return false;
         }
 
-        return await this.userService.verifyUser(codeData.user);
+        await this.userService.verifyUser(codeData.user);
+
+        return true;
     }
 }

@@ -10,18 +10,29 @@ export class CodeService {
     constructor(
         @InjectRepository(Code)
         private codeRepository: Repository<Code>
-    ) {}
+    ) { }
 
-    async createVerificationCode(user: User) {
-        const code = v4();
-
-        const createdCode = this.codeRepository.create({
-            code,
-            type: CodeTypes.VERIFICATION,
-            user
+    async saveVerificationCode(user: User) {
+        let codeData = await this.codeRepository.findOne({
+            where: {
+                user,
+                type: CodeTypes.VERIFICATION
+            }
         });
 
-        await this.codeRepository.save(createdCode);
+        const code = v4();
+
+        if (codeData) {
+            codeData.code = code;
+        } else {
+            codeData = this.codeRepository.create({
+                code,
+                type: CodeTypes.VERIFICATION,
+                user
+            });
+        }
+
+        await this.codeRepository.save(codeData);
 
         return code;
     }

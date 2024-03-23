@@ -48,6 +48,24 @@
       "@comment/*": [
         "src/comment//*"
       ],
+      "@feedback": [
+        "src/feedback/"
+      ],
+      "@feedback/*": [
+        "src/feedback//*"
+      ],
+      "@rabbit-mq": [
+        "src/rabbit-mq/"
+      ],
+      "@rabbit-mq/*": [
+        "src/rabbit-mq//*"
+      ],
+      "@user": [
+        "src/user/"
+      ],
+      "@user/*": [
+        "src/user//*"
+      ],
     }
   }
 }

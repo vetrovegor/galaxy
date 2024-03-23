@@ -7,6 +7,7 @@ import { Order } from './order.entity';
 import { OrderProductService } from '@order-product/order-product.service';
 import { BasketService } from '@basket/basket.service';
 import { AddressDto } from './dto/address.dto';
+import { RabbitMqService } from '@rabbit-mq/rabbit-mq.service';
 
 @Injectable()
 export class OrderService {
@@ -14,7 +15,8 @@ export class OrderService {
         @Inject('USER_SERVICE') private readonly userClient: ClientProxy,
         @InjectModel(Order) private readonly orderModel: typeof Order,
         private readonly basketService: BasketService,
-        private readonly orderProductService: OrderProductService
+        private readonly orderProductService: OrderProductService,
+        private readonly rabbitMqService: RabbitMqService
     ) { }
 
     async getAll(userId: string) {
@@ -74,9 +76,11 @@ export class OrderService {
             throw new BadRequestException('Корзина пуста');
         }
 
-        const address: AddressDto = await firstValueFrom(
-            this.userClient.send('get_user_address', { userId, addressId })
-        );
+        const address: AddressDto = await this.rabbitMqService.sendRequest({
+            client: this.userClient,
+            pattern: 'get_user_address',
+            data: { userId, addressId }
+        });
 
         if (!address) {
             throw new NotFoundException('Адрес не найден');

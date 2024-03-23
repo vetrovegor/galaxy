@@ -7,12 +7,14 @@ import { RegisterDTO } from "../auth/dto/register-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Role, User } from "./user.emtity";
 import { Repository } from "typeorm";
+import { MailService } from "@mail/mail.service";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly mailService: MailService
   ) { }
 
   async me(id: string) {
@@ -21,6 +23,16 @@ export class UserService {
     delete user.password;
 
     return { user };
+  }
+
+  async sendVerifyCode(id: string) {
+    const user = await this.findById(id);
+
+    if(user.isVerified) {
+      throw new BadRequestException('Пользователь верифицирован');
+    }
+
+    this.mailService.sendVerificationMail(user);
   }
 
   async findAll() {
@@ -77,11 +89,15 @@ export class UserService {
   }
 
   async getPreview(userId: string) {
-    const { id, nickname } = await this.findById(userId);
-
-    return {
-      id,
-      nickname
-    };
+    try {
+      const { id, nickname } = await this.findById(userId);
+  
+      return {
+        id,
+        nickname
+      };      
+    } catch (error) {
+      return null;
+    }
   }
 }

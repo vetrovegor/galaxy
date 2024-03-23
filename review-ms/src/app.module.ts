@@ -11,6 +11,8 @@ import { JwtAuthGuard } from '@auth/jwt-auth.guard';
 import { FileModule } from './file/file.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { CommentModule } from './comment/comment.module';
+import { RabbitMqModule } from './rabbit-mq/rabbit-mq.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { CommentModule } from './comment/comment.module';
     FileModule,
     FeedbackModule,
     CommentModule,
+    RabbitMqModule,
+    UserModule,
   ],
   providers: [
     {

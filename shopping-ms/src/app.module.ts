@@ -11,6 +11,7 @@ import { OrderModule } from './order/order.module';
 import { OrderProductModule } from './order-product/order-product.module';
 import * as path from 'path'
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { RabbitMqModule } from '@rabbit-mq/rabbit-mq.module';
 
 @Module({
   imports:
@@ -25,7 +26,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       ProductModule,
       BasketModule,
       OrderModule,
-      OrderProductModule
+      OrderProductModule,
+      RabbitMqModule
     ],
   controllers: [],
   providers: [

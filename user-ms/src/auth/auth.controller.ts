@@ -10,13 +10,11 @@ import {
 } from '@nestjs/common';
 import { RegisterDTO as RegisterDTO } from './dto/register-user.dto';
 import { AuthService } from './auth.service';
-import { Cookie, Public, UserAgent } from '@common/decorators';
+import { Cookie, CurrentUser, Public, UserAgent } from '@common/decorators';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { LoginDTO } from './dto/login-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthResponse } from './dto/auth-response.dto';
-import { RefreshResponse } from './dto/refresh-response.dto';
 
 const REFRESH_TOKEN = 'refresh-token';
 
@@ -79,9 +77,12 @@ export class AuthController {
         @Res()
         res: Response
     ) {
-        await this.authService.verify(code);
+        const success = await this.authService.verify(code);
 
-        res.redirect(this.configService.get('CLIENT_URL'));
+        res.redirect(success
+            ? this.configService.get('VERIFIED_CLIENT_URL')
+            : this.configService.get('NOTFOUND_CLIENT_URL')
+        );
     }
 
     @Get('refresh')

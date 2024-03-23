@@ -6,6 +6,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateReviewDTO } from './dto/create-review.dto';
 import { CommentService } from '@comment/comment.service';
 import { Public } from '@auth/public.decorator';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('review')
 export class ReviewController {
@@ -33,5 +34,10 @@ export class ReviewController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
   ) {
     return await this.commentService.getComments(reviewId, page, limit);
+  }
+
+  @MessagePattern('get_stats')
+  async getStats(data: { productId: string }) {
+    return await this.reviewService.getStats(data.productId);
   }
 }

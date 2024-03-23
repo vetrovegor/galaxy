@@ -54,6 +54,12 @@
       "@order-product/*": [
         "src/order-product//*"
       ],
+      "@rabbit-mq": [
+        "src/rabbit-mq/"
+      ],
+      "@rabbit-mq/*": [
+        "src/rabbit-mq//*"
+      ],
     }
   }
 }

@@ -6,9 +6,25 @@ import { Product, ProductSchema } from './product.schema';
 import { TypeModule } from 'src/type/type.module';
 import { FileModule } from '@file/file.module';
 import { AuthModule } from '@auth/auth.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ClientsModule.registerAsync([
+      {
+        name: 'REVIEW_SERVICE',
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [`${configService.get('RNQ_URL')}`],
+            queue: 'review-queue',
+            queueOptions: { durable: false }
+          }
+        }),
+        inject: [ConfigService]
+      }
+    ]),
     MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
     forwardRef(() => TypeModule),
     FileModule,

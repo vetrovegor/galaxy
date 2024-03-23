@@ -6,16 +6,28 @@ import { Model } from 'mongoose';
 import { TypeService } from 'src/type/type.service';
 import { FileService } from '@file/file.service';
 import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
+import { RabbitMqService } from '@rabbit-mq/rabbit-mq.service';
 
 @Injectable()
 export class ProductService {
     constructor(
-        @InjectModel(Product.name) private productModel: Model<Product>,
+        @Inject('REVIEW_SERVICE') private readonly reviewClient: ClientProxy,
+        @InjectModel(Product.name) private readonly productModel: Model<Product>,
         @Inject(forwardRef(() => TypeService))
-        private typeService: TypeService,
-        private fileService: FileService,
-        private configService: ConfigService
+        private readonly typeService: TypeService,
+        private readonly fileService: FileService,
+        private readonly configService: ConfigService,
+        private readonly rabbitMqService: RabbitMqService
     ) { }
+
+    private async getStats(productId) {
+        return await this.rabbitMqService.sendRequest({
+            client: this.reviewClient,
+            pattern: 'get_stats',
+            data: { productId }
+        });
+    }
 
     async findAll(page: number, limit: number, type?: string, brand?: string) {
         let productQuery = this.productModel.find();
@@ -29,6 +41,8 @@ export class ProductService {
 
         const totalCount = await this.productModel.countDocuments(productQuery.getQuery());
 
+        const totalPages = Math.ceil(totalCount / limit);
+
         const productsData = await productQuery
             .skip((page - 1) * limit)
             .limit(limit)
@@ -37,16 +51,24 @@ export class ProductService {
             .select('-brand')
             .exec();
 
+        const data = await Promise.all(
+            productsData.map(async product => {
+                const stats = await this.getStats(product._id);
+
+                return {
+                    _id: product._id,
+                    model: product.model,
+                    price: product.price,
+                    picture: `${this.configService.get('API_URL')}/${product.picture}`,
+                    stats
+                }
+            })
+        );
+
         return {
-            elementsCount: productsData.length,
-            totalCount,
-            isLastPage: page * limit >= totalCount,
-            data: productsData.map(product => ({
-                _id: product._id,
-                model: product.model,
-                price: product.price,
-                picture: `${this.configService.get('API_URL')}/${product.picture}`
-            }))
+            page,
+            totalPages,
+            data
         };
     }
 
@@ -60,14 +82,21 @@ export class ProductService {
             throw new NotFoundException('Продукт не найден');
         }
 
+        const stats = await this.getStats(id);
+
+        const { _id, model, price, picture, type, brand, characteristics } = product;
+
         return {
-            _id: product._id,
-            model: product.model,
-            price: product.price,
-            picture: `${this.configService.get('API_URL')}/${product.picture}`,
-            type: product.type,
-            brand: product.brand,
-            characteristics: product.characteristics
+            product: {
+                _id: _id,
+                model: model,
+                price: price,
+                picture: `${this.configService.get('API_URL')}/${picture}`,
+                stats,
+                type: type,
+                brand: brand,
+                characteristics: characteristics
+            }
         };
     }
 

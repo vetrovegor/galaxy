@@ -17,6 +17,7 @@ import { Role } from './user.emtity';
 import { MessagePattern } from '@nestjs/microservices';
 import { GetUserRequestDTO } from './dto/get-user-request.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@auth/guards';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -27,6 +28,13 @@ export class UserController {
     @Get('me')
     async me(@CurrentUser() user: JwtPayload) {
         return await this.userService.me(user.id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('send-verify-code')
+    async sendVerifyCode(@CurrentUser() user: JwtPayload) {
+        await this.userService.sendVerifyCode(user.id);
+        return HttpStatus.OK;
     }
 
     // сделать пагинацию

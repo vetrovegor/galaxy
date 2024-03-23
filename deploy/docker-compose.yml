@@ -40,6 +40,7 @@ services:
     container_name:  review-ms-db
     environment:
       - MYSQL_ROOT_PASSWORD=admin
+      # переименовать на review-ms-db
       - MYSQL_DATABASE=product-ms-db
     # убрать на продакшене
     ports:

@@ -11,7 +11,7 @@ export class BasketService {
         private readonly productService: ProductService
     ) { }
 
-    async addProduct({ productId }: BasketProductDto, userId: string) {
+    async addProduct({ productId, quantity }: BasketProductDto, userId: string) {
         await this.productService.findById(productId);
 
         const existedBasketItem = await this.basketModel.findOne({
@@ -19,10 +19,10 @@ export class BasketService {
         });
 
         if (!existedBasketItem) {
-            return await this.basketModel.create({ productId, userId, quantity: 1 });
+            return await this.basketModel.create({ productId, userId, quantity });
         }
 
-        existedBasketItem.quantity++;
+        existedBasketItem.quantity += quantity;
 
         return await existedBasketItem.save();
     }

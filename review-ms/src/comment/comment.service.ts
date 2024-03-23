@@ -1,16 +1,16 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { CreateCommentDTO } from './dto/create-comment.dto';
 import { ReviewService } from '@review/review.service';
 import { PrismaService } from '@prisma/prisma.service';
-import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { UserService } from '@user/user.service';
 
 @Injectable()
 export class CommentService {
     constructor(
-        @Inject('USER_SERVICE') private readonly userClient: ClientProxy,
         private readonly prismaService: PrismaService,
-        private readonly reviewService: ReviewService
+        @Inject(forwardRef(() => ReviewService))
+        private readonly reviewService: ReviewService,
+        private readonly userService: UserService
     ) { }
 
     async create(dto: CreateCommentDTO, userId: string) {
@@ -45,10 +45,7 @@ export class CommentService {
             commentsData.map(async review => {
                 const { userId, ...reviewDTO } = review;
 
-                // подумать как предусмотреть ситуацию если долго не возвращается пользователь то устанавливать его в null
-                const user = await firstValueFrom(
-                    this.userClient.send('get_user', { userId: review.userId })
-                );
+                const user = await this.userService.getById(userId);
 
                 return {
                     ...reviewDTO,
@@ -63,5 +60,11 @@ export class CommentService {
             isLastPage: page * limit >= totalCount,
             comments
         };
+    }
+
+    async getCount(reviewId: number) {
+        return await this.prismaService.reviewComment.count({
+            where: { reviewId }
+        });
     }
 }
