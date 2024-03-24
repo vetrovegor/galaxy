@@ -1,0 +1,29 @@
+.search {
+    width: 100%;
+    max-width: 320px;
+    position: relative;
+
+    &__input {
+        width: 100%;
+        min-height: 44px;
+        border-radius: 20px;
+        padding: 0 52px 0 12px;
+        border: 1px solid var(--borderColor);
+
+        &::placeholder {
+            opacity: 0.5;
+        }
+    }
+
+    &__btn {
+        position: absolute;
+        width: 38px;
+        top: 2px;
+        right: 2px;
+        bottom: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 19px;
+    }
+}

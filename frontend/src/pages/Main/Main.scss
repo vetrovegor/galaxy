@@ -1,0 +1,10 @@
+.main {
+    &__inner {
+        display: flex;
+        gap: 40px;
+    }
+
+    &__content {
+        flex-grow: 1;
+    }
+}

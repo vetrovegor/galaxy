@@ -1,0 +1,35 @@
+.review {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #F7FAFA;
+    padding: 20px;
+    border-radius: 8px;
+
+    &__block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__reactions {
+        gap: 20px;
+    }
+
+    &__comments {
+        padding-left: 40px;
+        display: none;
+        flex-direction: column;
+        gap: 24px;
+
+        &.active {
+            display: flex;
+        }
+    }
+
+    &__comment {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+}

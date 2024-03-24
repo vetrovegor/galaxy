@@ -1,0 +1,35 @@
+.auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+
+    &__form {
+        width: 100%;
+        max-width: 320px;
+        padding: 16px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &__btn {
+        width: 100%;
+        min-height: 40px;
+        border-radius: 20px;
+    }
+
+    &__text {
+        width: 100%;
+        justify-content: center;
+    }
+
+    &__text-btn {
+        align-self: center;
+        
+        &:hover {
+            color: var(--btnHoverColor);
+        }
+    }
+}
