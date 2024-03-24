@@ -79,7 +79,7 @@ const Product = () => {
                             <Skeleton.Input style={{ width: 155, height: 20.5 }} active />
                         )}
                         <div className="product-page__buy-block">
-                            <p className="product-page__price">${product?.price}</p>
+                            <p className="product-page__price">{product?.price}₽</p>
                             <div className="product-page__basket-block">
                                 <div className="product-page__counter">
                                     <button onClick={() => setCount(prev => prev - 1)} className={`product-page__change-count item${count == 1 && " disabled"}`}>
@@ -102,9 +102,7 @@ const Product = () => {
                                 </button>
                             </div>
                         </div>
-                        <p className="text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Non earum dignissimos placeat quia ducimus, nihil voluptate quibusdam ullam ipsa eos repudiandae? Recusandae delectus quis voluptatibus cum quos libero voluptates sed?
-                        </p>
+                        <p className="text">{product?.desc}</p>
                         <button className="product-page__wish-btn item">
                             В избранное
                             <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="var(--primaryColor)">

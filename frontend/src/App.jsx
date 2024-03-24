@@ -70,22 +70,17 @@ export function App() {
 
     useEffect(() => {
         const getUserShortInfo = async () => {
-            const refreshData = await authService.refresh();
-
-            if (!refreshData) {
-                setLoading(false);
-                return;
-            }
-
-            localStorage.setItem('accessToken', refreshData.accessToken);
-
             const userData = await authService.getUserShortInfo();
 
             login(userData?.user);
             setLoading(false);
         };
 
-        getUserShortInfo();
+        if (localStorage.getItem('accessToken')) {
+            getUserShortInfo();
+        } else {
+            setLoading(false);
+        }
     }, []);
 
     if (loading) {

@@ -304,3 +304,16 @@ button {
         font-size: 16px;
     }
 }
+
+.ant-pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.ant-pagination-item-active {
+    border: 1px solid var(--primaryColor)!important;
+
+    a {
+        color: var(--primaryColor)!important;
+    }
+}

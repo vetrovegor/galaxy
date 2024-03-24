@@ -41,8 +41,6 @@ export class ProductService {
 
         const totalCount = await this.productModel.countDocuments(productQuery.getQuery());
 
-        const totalPages = Math.ceil(totalCount / limit);
-
         const productsData = await productQuery
             .skip((page - 1) * limit)
             .limit(limit)
@@ -66,9 +64,8 @@ export class ProductService {
         );
 
         return {
-            page,
-            totalPages,
-            data
+            data,
+            totalCount
         };
     }
 
@@ -84,12 +81,13 @@ export class ProductService {
 
         const stats = await this.getStats(id);
 
-        const { _id, model, price, picture, type, brand, characteristics } = product;
+        const { _id, model, desc, price, picture, type, brand, characteristics } = product;
 
         return {
             product: {
                 _id: _id,
                 model: model,
+                desc,
                 price: price,
                 picture: `${this.configService.get('API_URL')}/${picture}`,
                 stats,

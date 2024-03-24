@@ -13,6 +13,12 @@ export class Product {
   })
   @Prop()
   model: string;
+  
+  @ApiProperty({
+    example: 'Описание'
+  })
+  @Prop()
+  desc: string;
 
   @ApiProperty({
     example: 100000

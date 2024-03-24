@@ -1,11 +1,11 @@
 import { notificationsService } from "../notifications/notificationService";
-import { host } from "./axios";
+import { authHost, host } from "./axios";
 
 class ProductService {
-    async getProducts(page = 1, limit = 9) {
+    async getProducts(page, limit, type, brand) {
         try {
             const { data } = await host.get(`/product-ms/product`, {
-                params: {page, limit}
+                params: { page, limit, type, brand }
             });
             return data;
         } catch (error) {
@@ -17,6 +17,18 @@ class ProductService {
         try {
             const { data } = await host.get(`/product-ms/product/${productId}`);
             return data.product;
+        } catch (error) {
+            notificationsService.sendErrorResponseNotification(error.response.data.message);
+        }
+    }
+
+    async createProduct(dto) {
+        try {
+            await authHost.post(
+                '/product-ms/product',
+                dto
+            );
+            notificationsService.sendSuccessNotification('Товар создан');
         } catch (error) {
             notificationsService.sendErrorResponseNotification(error.response.data.message);
         }

@@ -39,26 +39,12 @@ class AuthService {
         }
     }
 
-    async refresh() {
-        try {
-            const { data } = await host.get(`/user-ms/auth/refresh`);
-            return data;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     async getUserShortInfo() {
         try {
-            const { data } = await authHost.get(
-                `/user-ms/me`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                }
-            });
+            const { data } = await authHost.get(`/user-ms/me`);
             return data;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification(error.response.data.message);
+            console.log(error.response.data.message);
         }
     }
 }

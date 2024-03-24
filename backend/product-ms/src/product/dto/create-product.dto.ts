@@ -13,10 +13,16 @@ export class CharacteristicDto {
 
 export class CreateProductDTO {
     @IsString()
+    @IsNotEmpty()
     model: string;
+    
+    @IsString()
+    @IsNotEmpty()
+    desc: string;
 
     @IsPositive()
     @Transform(({ value }) => Number(value))
+    @IsNotEmpty()
     price: number;
 
     @IsObjectId()

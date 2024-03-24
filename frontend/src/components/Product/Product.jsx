@@ -29,7 +29,7 @@ const Product = ({ product }) => {
                 <Skeleton.Input style={{ width: 135, height: 16 }} active />
             )}
             <div className="product__bottom">
-                <p className="product__price">${price}</p>
+                <p className="product__price">{price}₽</p>
                 <button className="product__basket-btn">
                     В корзину
                     <span className="product__basket-icon">

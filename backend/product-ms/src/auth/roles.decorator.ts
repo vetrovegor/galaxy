@@ -37,7 +37,11 @@ export class RolesGuard implements CanActivate {
                 throw new UnauthorizedException();
             }
 
+            console.log({token});
+
             const user: JwtPayload = this.jwtService.verify(token);
+
+            console.log({user});
 
             if (user.isBanned) {
                 throw new ForbiddenException();
