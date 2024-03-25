@@ -8,6 +8,7 @@ import { MailModule } from './mail/mail.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@auth/guards';
 import { AddressModule } from './address/address.module';
+import { RabbitMqModule } from '@rabbit-mq/rabbit-mq.module';
 
 @Module({
     imports: [
@@ -19,7 +20,8 @@ import { AddressModule } from './address/address.module';
         UserModule,
         CodeModule,
         MailModule,
-        AddressModule
+        AddressModule,
+        RabbitMqModule
     ],
     providers: [
         {

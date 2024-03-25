@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./Products.scss";
 import { productService } from "../../services/productService";
 import { useQuery, useQueryClient } from "react-query";
@@ -7,6 +7,9 @@ import { reviewService } from "../../services/reviewService";
 import Review from "../../components/Review/Review";
 import Layout from "../Layout/Layout";
 import { Rate, Skeleton } from "antd";
+import useUserStore from "../../stores/userStore";
+import useFavoriteStore from "../../stores/favoriteStore";
+import { favoriteService } from "../../services/favoriteService";
 
 const Product = () => {
     const queryClient = useQueryClient();
@@ -17,6 +20,22 @@ const Product = () => {
         queryKey: ['product'],
         queryFn: () => productService.getProductById(productId)
     });
+
+    const { user } = useUserStore();
+    const navigate = useNavigate();
+    const { favorites, toggle } = useFavoriteStore();
+
+    const toggleFavorite = async () => {
+        if (!user) {
+            return navigate('/auth');
+        }
+
+        const success = await favoriteService.toggle(product._id);
+
+        if (success) {
+            toggle(product._id);
+        }
+    }
 
     const [count, setCount] = useState(1);
     const [openReviews, setOpenReviews] = useState(false);
@@ -103,8 +122,11 @@ const Product = () => {
                             </div>
                         </div>
                         <p className="text">{product?.desc}</p>
-                        <button className="product-page__wish-btn item">
-                            В избранное
+                        <button
+                            onClick={toggleFavorite}
+                            className={`product-page__wish-btn item${favorites?.includes(product?._id) ? " active" : ""}`}
+                        >
+                            В избранно{favorites?.includes(product?._id) ? "м" : "е"}
                             <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="var(--primaryColor)">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                             </svg>

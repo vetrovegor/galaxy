@@ -54,7 +54,7 @@ export class BasketService {
         let totalSum = 0;
 
         const products = await Promise.all(
-            basketItems.map(async ({ id, quantity, productId }) => {
+            basketItems.map(async ({ quantity, productId }) => {
                 const product = await this.productService.findById(productId);
 
                 productsQuantity += quantity;
@@ -68,6 +68,12 @@ export class BasketService {
         );
 
         return { products, productsQuantity, totalSum };
+    }
+
+    async clear(userId: string) {
+        return await this.basketModel.destroy({
+            where: { userId }
+        });
     }
 
     async getCount(userId: string) {

@@ -5,9 +5,11 @@ import { authService } from "../../services/authService";
 import { useMutation } from "react-query";
 import useUserStore from "../../stores/userStore";
 import Layout from "../Layout/Layout";
+import useFavoriteStore from "../../stores/favoriteStore";
 
 const Auth = () => {
-    const login = useUserStore((state) => state.login);
+    const {login} = useUserStore();
+    const {init} = useFavoriteStore();
 
     const [isLogin, setIsLogin] = useState(true);
 
@@ -30,6 +32,7 @@ const Auth = () => {
         onSuccess(data) {
             if (data) {
                 login(data.user);
+                init(data.favorites);
                 localStorage.setItem('accessToken', data.accessToken);
                 navigate('/');
             }

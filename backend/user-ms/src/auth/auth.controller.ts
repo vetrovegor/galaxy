@@ -56,7 +56,7 @@ export class AuthController {
         @Res()
         res: Response
     ) {
-        const { user, accessToken, refreshToken } =
+        const { userShortInfo, accessToken, refreshToken } =
             await this.authService.login(dto, userAgent);
 
         res.cookie(REFRESH_TOKEN, refreshToken, {
@@ -65,7 +65,7 @@ export class AuthController {
         });
 
         res.json({
-            user,
+            ...userShortInfo,
             accessToken
         })
     }

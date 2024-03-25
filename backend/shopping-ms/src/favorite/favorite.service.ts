@@ -19,14 +19,14 @@ export class FavoriteService {
         if (existedFavorite) {
             await existedFavorite.destroy();
 
-            return { favorite: existedFavorite };
+            return { message: 'Товар удален из избранного' };
         }
 
         await this.productService.findById(productId);
 
-        const createdFavorite = await this.favoriteModel.create({ productId, userId });
+        await this.favoriteModel.create({ productId, userId });
 
-        return { favorite: createdFavorite };
+        return { message: 'Товар добавлен в избранное' };
     }
 
     async findAll(userId: string) {
@@ -41,5 +41,13 @@ export class FavoriteService {
         );
 
         return { products };
+    }
+
+    async findIds(userId: string) {
+        const favorites = await this.favoriteModel.findAll({
+            where: { userId }
+        });
+
+        return favorites.map(item => item.productId);
     }
 }

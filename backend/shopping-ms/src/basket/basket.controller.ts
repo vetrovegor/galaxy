@@ -3,6 +3,7 @@ import { BasketService } from './basket.service';
 import { BasketProductDto } from './dto/basket-product.dto';
 import { CurrentUser } from '@auth/current-user.decorator';
 import { JwtPayload } from '@auth/types';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('basket')
 export class BasketController {
@@ -24,4 +25,16 @@ export class BasketController {
   async get(@CurrentUser() user: JwtPayload) {
     return await this.basketService.get(user.id);
   }
-}
+
+  @Delete()
+  async clear(@CurrentUser() user: JwtPayload) {
+    await this.basketService.clear(user.id);
+    
+    return HttpStatus.OK;
+  }
+
+  @MessagePattern('get_basket')
+  async getByUserId(data: { userId: string }) {
+    return await this.basketService.get(data.userId);
+  }
+} 

@@ -1,6 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
 import { ProductDto } from './dto/product.dto';
 import { RabbitMqService } from '@rabbit-mq/rabbit-mq.service';
 
@@ -16,6 +15,7 @@ export class ProductService {
             client: this.productClient,
             pattern: 'get_product',
             data: {productId},
+            timeoutDuration: 1250
         });
 
         if (!product) {

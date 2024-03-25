@@ -90,6 +90,15 @@
         gap: 20px;
         border-radius: 25px;
 
+        &.active {
+            color: var(--primaryColor);
+            border: 1px solid var(--primaryColor);
+
+            svg {
+                fill: var(--primaryColor);
+            }
+        }
+
         &:hover {
             border: 1px solid var(--primaryColor);
             color: var(--primaryColor);

@@ -135,11 +135,14 @@ export class ProductService {
                 .select('-characteristics')
                 .select('-type')
                 .select('-brand')
-                .exec();;
+                .exec();
+
+            const stats = await this.getStats(id);
 
             return {
                 _id,
                 model,
+                stats,
                 price,
                 picture: `${this.configService.get('API_URL')}/${picture}`
             };

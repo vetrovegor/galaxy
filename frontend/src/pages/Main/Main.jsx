@@ -8,6 +8,7 @@ import Layout from "../Layout/Layout";
 import { typeService } from "../../services/typeService";
 import Product from "../../components/Product/Product";
 import { Pagination } from "antd";
+import useFavoriteStore from "../../stores/favoriteStore";
 
 const Main = () => {
     const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ const Main = () => {
     const queryParams = new URLSearchParams(window.location.search);
 
     const [page, setPage] = useState(queryParams.get("page") || 1);
-    const limit = 1;
+    const limit = 9;
     const [type, setType] = useState(queryParams.get("type"));
     const [productsData, setProductsData] = useState(null);
     const [totalCount, setTotalCount] = useState(0);

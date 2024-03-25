@@ -3,14 +3,17 @@ import "./Header.scss";
 import useUserStore from "../../stores/userStore";
 import { authService } from "../../services/authService";
 import Search from "../Search/Search";
+import useFavoriteStore from "../../stores/favoriteStore";
 
 export const Header = ({ showSearch }) => {
     const { user, logout } = useUserStore();
+    const { clear } = useFavoriteStore();
 
     const logoutHandler = async () => {
         logout();
+        clear();
         await authService.logout();
-        localStorage.clear();
+        localStorage.removeItem('accessToken');
     }
 
     return (

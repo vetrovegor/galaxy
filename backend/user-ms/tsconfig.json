@@ -54,6 +54,12 @@
       "@address/*": [
         "src/address/*"
       ],
+      "@rabbit-mq": [
+        "src/rabbit-mq/"
+      ],
+      "@rabbit-mq/*": [
+        "src/rabbit-mq//*"
+      ],
     }
   }
 }

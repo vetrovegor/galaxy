@@ -78,10 +78,10 @@ export class AuthService {
             userAgent
         );
 
-        const { password: userPassword, ...user } = existedUser;
+        const userShortInfo = await this.userService.createShortInfo(existedUser);
 
         return {
-            user,
+            userShortInfo,
             accessToken,
             refreshToken
         };

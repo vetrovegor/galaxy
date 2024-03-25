@@ -16,6 +16,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdminType from "./pages/Admin/AdminType";
 import AdminBrand from "./pages/Admin/AdminBrand";
 import AdminProduct from "./pages/Admin/AdminProduct";
+import { healthService } from "./services/healthService";
+import Error from "./pages/Error/Error";
+import useFavoriteStore from "./stores/favoriteStore";
+import Favorite from "./pages/Favorite/Favorite";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +35,11 @@ const router = createBrowserRouter([
     {
         path: "/profile",
         element: <Protected compontent={Profile} />
+
+    },
+    {
+        path: "/favorites",
+        element: <Protected compontent={Favorite} />
 
     },
     {
@@ -64,24 +73,38 @@ const router = createBrowserRouter([
 ]);
 
 export function App() {
-    const { login } = useUserStore();
-
+    const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const getUserShortInfo = async () => {
-            const userData = await authService.getUserShortInfo();
+    const { login } = useUserStore();
+    const { init } = useFavoriteStore();
 
-            login(userData?.user);
-            setLoading(false);
-        };
+    const initialize = async () => {
+        const status = await healthService.checkHealth();
 
-        if (localStorage.getItem('accessToken')) {
-            getUserShortInfo();
-        } else {
-            setLoading(false);
+        if (status != 200) {
+            return setError(true);
         }
+
+        if (!localStorage.getItem('accessToken')) {
+            return setLoading(false);
+        }
+
+        const userData = await authService.getUserShortInfo();
+
+        login(userData?.user);
+        init(userData?.favorites);
+
+        return setLoading(false);
+    };
+
+    useEffect(() => {
+        initialize();
     }, []);
+
+    if (error) {
+        return <Error />;
+    }
 
     if (loading) {
         return <>Loading...</>;

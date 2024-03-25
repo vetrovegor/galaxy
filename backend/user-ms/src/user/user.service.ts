@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
@@ -8,27 +9,22 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Role, User } from "./user.emtity";
 import { Repository } from "typeorm";
 import { MailService } from "@mail/mail.service";
+import { ClientProxy } from "@nestjs/microservices";
+import { RabbitMqService } from "@rabbit-mq/rabbit-mq.service";
 
 @Injectable()
 export class UserService {
   constructor(
+    @Inject('SHOPPING_SERVICE') private readonly shoppingClient: ClientProxy,
+    private readonly rabbitMqService: RabbitMqService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly mailService: MailService
   ) { }
-
-  async me(id: string) {
-    const user = await this.findById(id);
-
-    delete user.password;
-
-    return { user };
-  }
-
   async sendVerifyCode(id: string) {
     const user = await this.findById(id);
 
-    if(user.isVerified) {
+    if (user.isVerified) {
       throw new BadRequestException('Пользователь верифицирован');
     }
 
@@ -45,6 +41,30 @@ export class UserService {
         id,
       },
     });
+  }
+
+  async createShortInfo(user: User) {
+    delete user.password;
+
+    // вынести в shoppingService
+    const favorites = await this.rabbitMqService.sendRequest({
+      client: this.shoppingClient,
+      pattern: 'get_favorites',
+      data: { userId: user.id }
+    });
+
+    const bakset = await this.rabbitMqService.sendRequest({
+      client: this.shoppingClient,
+      pattern: 'get_basket',
+      data: { userId: user.id }
+    });
+
+    return { user, favorites, bakset };
+  }
+
+  async me(id: string) {
+    const user = await this.findById(id);
+    return await this.createShortInfo(user);
   }
 
   async findByEmailOrNickname(nickname: string, email?: string) {
@@ -91,11 +111,11 @@ export class UserService {
   async getPreview(userId: string) {
     try {
       const { id, nickname } = await this.findById(userId);
-  
+
       return {
         id,
         nickname
-      };      
+      };
     } catch (error) {
       return null;
     }

@@ -10,6 +10,9 @@ class AuthService {
                 email,
                 password
             });
+            
+            notificationsService.sendSuccessNotification('Вы успешно зарегистрировались! Вам на почту отправлена ссылка для подтверждения аккаунта');
+
             return data;
         } catch (error) {
             notificationsService.sendErrorResponseNotification(error.response.data.message);
