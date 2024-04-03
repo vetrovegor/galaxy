@@ -1,4 +1,10 @@
-import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
+import {
+    BadRequestException,
+    Inject,
+    Injectable,
+    NotFoundException,
+    forwardRef
+} from '@nestjs/common';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './product.schema';
@@ -13,13 +19,14 @@ import { RabbitMqService } from '@rabbit-mq/rabbit-mq.service';
 export class ProductService {
     constructor(
         @Inject('REVIEW_SERVICE') private readonly reviewClient: ClientProxy,
-        @InjectModel(Product.name) private readonly productModel: Model<Product>,
+        @InjectModel(Product.name)
+        private readonly productModel: Model<Product>,
         @Inject(forwardRef(() => TypeService))
         private readonly typeService: TypeService,
         private readonly fileService: FileService,
         private readonly configService: ConfigService,
         private readonly rabbitMqService: RabbitMqService
-    ) { }
+    ) {}
 
     private async getStats(productId) {
         return await this.rabbitMqService.sendRequest({
@@ -39,7 +46,9 @@ export class ProductService {
             productQuery = productQuery.where('brand').equals(brand);
         }
 
-        const totalCount = await this.productModel.countDocuments(productQuery.getQuery());
+        const totalCount = await this.productModel.countDocuments(
+            productQuery.getQuery()
+        );
 
         const productsData = await productQuery
             .skip((page - 1) * limit)
@@ -50,7 +59,7 @@ export class ProductService {
             .exec();
 
         const data = await Promise.all(
-            productsData.map(async product => {
+            productsData.map(async (product) => {
                 const stats = await this.getStats(product._id);
 
                 return {
@@ -59,7 +68,7 @@ export class ProductService {
                     price: product.price,
                     picture: `${this.configService.get('API_URL')}/${product.picture}`,
                     stats
-                }
+                };
             })
         );
 
@@ -70,39 +79,36 @@ export class ProductService {
     }
 
     async getFullInfo(id: string) {
-        const product = await this.productModel
+        const existedProduct = await this.productModel
             .findById(id)
             .populate('type', 'name')
             .populate('brand', 'name');
 
-        if (!product) {
+        if (!existedProduct) {
             throw new NotFoundException('Продукт не найден');
         }
 
         const stats = await this.getStats(id);
 
-        const { _id, model, desc, price, picture, type, brand, characteristics } = product;
-
-        return {
-            product: {
-                _id: _id,
-                model: model,
-                desc,
-                price: price,
-                picture: `${this.configService.get('API_URL')}/${picture}`,
-                stats,
-                type: type,
-                brand: brand,
-                characteristics: characteristics
-            }
+        const product = {
+            ...existedProduct.toJSON(),
+            picture: `${this.configService.get('API_URL')}/${existedProduct.picture}`,
+            stats
         };
+
+        return { product };
     }
 
     async create(dto: CreateProductDTO, picture: Express.Multer.File) {
-        const { characteristics: typeCharacteristics } = await this.typeService.getCharacteristicsByTypeId(dto.type);
+        const { characteristics: typeCharacteristics } =
+            await this.typeService.getCharacteristicsByTypeId(dto.type);
 
-        if (typeCharacteristics.length !== dto.characteristics.length
-            || !dto.characteristics.every(item => typeCharacteristics.includes(item.characteristic))) {
+        if (
+            typeCharacteristics.length !== dto.characteristics.length ||
+            !dto.characteristics.every((item) =>
+                typeCharacteristics.includes(item.characteristic)
+            )
+        ) {
             throw new BadRequestException('Некорректные характеристики');
         }
 
@@ -130,7 +136,7 @@ export class ProductService {
 
     async getById(id: string) {
         try {
-            const { _id, model, price, picture, brand } = await this.productModel
+            const { _id, model, price, picture } = await this.productModel
                 .findById(id)
                 .select('-characteristics')
                 .select('-type')
@@ -156,6 +162,8 @@ export class ProductService {
     }
 
     async getProductsCountByBrand(brandId: string) {
-        return await this.productModel.countDocuments({ brand: brandId }).exec();
+        return await this.productModel
+            .countDocuments({ brand: brandId })
+            .exec();
     }
 }

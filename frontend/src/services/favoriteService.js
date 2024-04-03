@@ -1,5 +1,5 @@
-import { notificationsService } from "../notifications/notificationService";
-import { authHost } from "./axios";
+import { notificationsService } from '../notifications/notificationService';
+import { authHost } from './axios';
 
 class FavoriteService {
     async getFavorites() {
@@ -13,8 +13,7 @@ class FavoriteService {
 
     async toggle(productId) {
         try {
-            const response = await authHost.post(
-                '/shopping-ms/favorite', {
+            const response = await authHost.post('/shopping-ms/favorite', {
                 productId
             });
 
@@ -22,7 +21,9 @@ class FavoriteService {
 
             return response.status == 201;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification('Произошла ошибка при добавлении товара в избранное');
+            notificationsService.sendErrorResponseNotification(
+                'Произошла ошибка при добавлении товара в избранное'
+            );
         }
     }
 }

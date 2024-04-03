@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { User } from "@user/user.emtity";
+import { ApiProperty } from '@nestjs/swagger';
+import { User } from '@user/user.emtity';
 
 export class AuthResponse {
     @ApiProperty({ description: 'Пользователь' })

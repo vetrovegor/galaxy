@@ -1,13 +1,13 @@
-import React, { useState } from "react"
-import AdminLayout from "./AdminLayout";
-import Search from "../../components/Search/Search";
-import Popup from "../../components/Popup/Popup";
-import { useQueryClient } from "react-query";
-import { typeService } from "../../services/typeService";
-import { brandService } from "../../services/brandService";
-import { Upload } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { productService } from "../../services/productService";
+import React, { useState } from 'react';
+import AdminLayout from './AdminLayout';
+import Search from '../../components/Search/Search';
+import Popup from '../../components/Popup/Popup';
+import { useQueryClient } from 'react-query';
+import { typeService } from '../../services/typeService';
+import { brandService } from '../../services/brandService';
+import { Upload } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { productService } from '../../services/productService';
 
 const AdminProduct = () => {
     const queryClient = useQueryClient();
@@ -54,25 +54,25 @@ const AdminProduct = () => {
 
         setcharacteristics(characteristics);
 
-        setInfo(prev => ({
+        setInfo((prev) => ({
             ...prev,
             model: `${name} ${info.brand.name} `,
             type: {
                 id,
                 name
             },
-            characteristics: characteristics.map(characteristic => ({
+            characteristics: characteristics.map((characteristic) => ({
                 characteristic,
                 value: ''
             }))
         }));
-    }
+    };
 
     const handleBrandChange = (e) => {
         const id = e.target.value;
         const name = e.target[e.target.selectedIndex].text;
 
-        setInfo(prev => ({
+        setInfo((prev) => ({
             ...prev,
             model: `${info.type.name} ${name} `,
             brand: {
@@ -80,17 +80,19 @@ const AdminProduct = () => {
                 name
             }
         }));
-    }
+    };
 
     const changeInfo = (key, value) => {
-        setInfo(prev => ({
+        setInfo((prev) => ({
             ...prev,
             [key]: value
-        }))
-    }
+        }));
+    };
 
     const handleCharacteristicChange = (characteristic, value) => {
-        const index = info.characteristics.findIndex(item => item.characteristic == characteristic);
+        const index = info.characteristics.findIndex(
+            (item) => item.characteristic == characteristic
+        );
 
         const updatedCharacteristics = [...info.characteristics];
 
@@ -105,7 +107,8 @@ const AdminProduct = () => {
     };
 
     const handleCreateProduct = async () => {
-        const { type, brand, model, desc, picture, price, characteristics } = info;
+        const { type, brand, model, desc, picture, price, characteristics } =
+            info;
 
         const formData = new FormData();
 
@@ -117,14 +120,17 @@ const AdminProduct = () => {
         formData.append('price', price);
 
         characteristics.forEach((item, index) => {
-            formData.append(`characteristics[${index}][characteristic]`, item.characteristic);
+            formData.append(
+                `characteristics[${index}][characteristic]`,
+                item.characteristic
+            );
             formData.append(`characteristics[${index}][value]`, item.value);
         });
 
         await productService.createProduct(formData);
 
         setOpenCreateForm(false);
-    }
+    };
 
     return (
         <>
@@ -134,7 +140,7 @@ const AdminProduct = () => {
                     <Search placeholder="Поиск" />
                     <button
                         onClick={handleOpenCreateProductPopup}
-                        className="btn admin__btn"
+                        className="btn popup__btn"
                     >
                         Добавить
                     </button>
@@ -153,9 +159,13 @@ const AdminProduct = () => {
                             value={info.type.id}
                             onChange={handleTypeChange}
                         >
-                            <option value="" disabled hidden>Выберите тип</option>
-                            {types.map(type => (
-                                <option key={type._id} value={type._id}>{type.name}</option>
+                            <option value="" disabled hidden>
+                                Выберите тип
+                            </option>
+                            {types.map((type) => (
+                                <option key={type._id} value={type._id}>
+                                    {type.name}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -166,9 +176,13 @@ const AdminProduct = () => {
                             value={info.brand.id}
                             onChange={handleBrandChange}
                         >
-                            <option value="" disabled hidden>Выберите бренд</option>
-                            {brands.map(brand => (
-                                <option key={brand._id} value={brand._id}>{brand.name}</option>
+                            <option value="" disabled hidden>
+                                Выберите бренд
+                            </option>
+                            {brands.map((brand) => (
+                                <option key={brand._id} value={brand._id}>
+                                    {brand.name}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -176,7 +190,9 @@ const AdminProduct = () => {
                         <p className="placeholder">Модель</p>
                         <input
                             value={info.model}
-                            onChange={e => changeInfo('model', e.target.value)}
+                            onChange={(e) =>
+                                changeInfo('model', e.target.value)
+                            }
                             type="text"
                             className="input"
                             placeholder="Модель"
@@ -186,7 +202,7 @@ const AdminProduct = () => {
                         <p className="placeholder">Описание</p>
                         <textarea
                             value={info.desc}
-                            onChange={e => changeInfo('desc', e.target.value)}
+                            onChange={(e) => changeInfo('desc', e.target.value)}
                             className="textarea"
                             placeholder="Описание"
                         ></textarea>
@@ -198,7 +214,10 @@ const AdminProduct = () => {
                         onChange={handlePictureChange}
                         beforeUpload={() => false}
                     >
-                        <button style={{ border: 0, background: 'none' }} type="button">
+                        <button
+                            style={{ border: 0, background: 'none' }}
+                            type="button"
+                        >
                             <PlusOutlined />
                             <div style={{ marginTop: 8 }}>Upload</div>
                         </button>
@@ -207,7 +226,9 @@ const AdminProduct = () => {
                         <p className="placeholder">Цена</p>
                         <input
                             value={info.price}
-                            onChange={e => changeInfo('price', e.target.value)}
+                            onChange={(e) =>
+                                changeInfo('price', e.target.value)
+                            }
                             type="number"
                             className="input"
                             placeholder="Цена"
@@ -219,7 +240,12 @@ const AdminProduct = () => {
                             <p className="placeholder">{characteristic}</p>
                             <input
                                 value={info.characteristics[i].value || ''}
-                                onChange={e => handleCharacteristicChange(characteristic, e.target.value)}
+                                onChange={(e) =>
+                                    handleCharacteristicChange(
+                                        characteristic,
+                                        e.target.value
+                                    )
+                                }
                                 type="text"
                                 className="input"
                                 placeholder={characteristic}
@@ -229,12 +255,13 @@ const AdminProduct = () => {
                 </div>
                 <button
                     onClick={handleCreateProduct}
-                    className="btn admin__btn">
+                    className="btn popup__btn"
+                >
                     Создать товар
                 </button>
             </Popup>
         </>
-    )
+    );
 };
 
 export default AdminProduct;

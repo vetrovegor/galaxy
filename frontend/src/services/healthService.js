@@ -1,4 +1,4 @@
-import { host } from "./axios";
+import { host } from './axios';
 
 class HealthService {
     async checkHealth() {

@@ -9,8 +9,8 @@ import { JwtModule } from '@nestjs/jwt';
                 secret: configService.get('JWT_SECRET')
             }),
             inject: [ConfigService]
-        }),
+        })
     ],
     exports: [JwtModule]
 })
-export class AuthModule { }
+export class AuthModule {}

@@ -1,9 +1,9 @@
-import React, { useState } from "react"
-import AdminLayout from "./AdminLayout";
-import Search from "../../components/Search/Search";
-import Popup from "../../components/Popup/Popup";
-import { useMutation, useQueryClient } from "react-query";
-import { brandService } from "../../services/brandService";
+import React, { useState } from 'react';
+import AdminLayout from './AdminLayout';
+import Search from '../../components/Search/Search';
+import Popup from '../../components/Popup/Popup';
+import { useMutation, useQueryClient } from 'react-query';
+import { brandService } from '../../services/brandService';
 
 const AdminBrand = () => {
     const queryClient = useQueryClient();
@@ -15,7 +15,7 @@ const AdminBrand = () => {
         mutationKey: ['create-brand'],
         mutationFn: (brandName) => brandService.createBrand(brandName),
         onSuccess(data) {
-            !!data && setOpenCreateForm(false); 
+            !!data && setOpenCreateForm(false);
         }
     });
 
@@ -27,7 +27,7 @@ const AdminBrand = () => {
                     <Search placeholder="Поиск" />
                     <button
                         onClick={() => setOpenCreateForm(true)}
-                        className="btn admin__btn"
+                        className="btn popup__btn"
                     >
                         Добавить
                     </button>
@@ -42,20 +42,18 @@ const AdminBrand = () => {
                     <p className="placeholder">Бренд</p>
                     <input
                         value={name}
-                        onChange={e => setName(e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                         type="text"
                         className="input"
                         placeholder="Бренд"
                     />
                 </div>
-                <button
-                    onClick={() => mutate(name)}
-                    className="btn admin__btn">
+                <button onClick={() => mutate(name)} className="btn popup__btn">
                     Создать бренд
                 </button>
             </Popup>
         </>
-    )
+    );
 };
 
 export default AdminBrand;

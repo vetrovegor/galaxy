@@ -4,23 +4,23 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [
-    ClientsModule.registerAsync([
-      {
-        name: 'PRODUCT_SERVICE',
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.RMQ,
-          options: {
-            urls: [`${configService.get('RNQ_URL')}`],
-            queue: 'product-queue',
-            queueOptions: { durable: false }
-          }
-        }),
-        inject: [ConfigService]
-      }
-    ])
-  ],
-  providers: [ProductService],
-  exports: [ProductService]
+    imports: [
+        ClientsModule.registerAsync([
+            {
+                name: 'PRODUCT_SERVICE',
+                useFactory: (configService: ConfigService) => ({
+                    transport: Transport.RMQ,
+                    options: {
+                        urls: [`${configService.get('RNQ_URL')}`],
+                        queue: 'product-queue',
+                        queueOptions: { durable: false }
+                    }
+                }),
+                inject: [ConfigService]
+            }
+        ])
+    ],
+    providers: [ProductService],
+    exports: [ProductService]
 })
-export class ProductModule { }
+export class ProductModule {}

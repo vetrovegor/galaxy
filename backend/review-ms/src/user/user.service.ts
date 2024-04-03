@@ -7,7 +7,7 @@ export class UserService {
     constructor(
         @Inject('USER_SERVICE') private readonly userClient: ClientProxy,
         private readonly rabbitMqService: RabbitMqService
-    ) { }
+    ) {}
 
     async getById(userId: string) {
         return await this.rabbitMqService.sendRequest({

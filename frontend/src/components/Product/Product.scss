@@ -10,7 +10,7 @@
         overflow: hidden;
 
         img {
-            transition: .3s;
+            transition: 0.3s;
         }
 
         &:hover {
@@ -33,7 +33,7 @@
         border-radius: 16px;
 
         &.active svg {
-            fill: #FFF;
+            fill: #fff;
         }
     }
 
@@ -69,7 +69,7 @@
     }
 
     &__basket-icon {
-        color: #FFF;
+        color: #fff;
         background-color: var(--primaryColor);
         position: absolute;
         right: 0;

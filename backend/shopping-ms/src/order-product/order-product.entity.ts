@@ -1,5 +1,11 @@
 import { Order } from '@order/order.entity';
-import { BelongsTo, Column, ForeignKey, Model, Table } from 'sequelize-typescript';
+import {
+    BelongsTo,
+    Column,
+    ForeignKey,
+    Model,
+    Table
+} from 'sequelize-typescript';
 
 @Table({
     tableName: 'order-product',

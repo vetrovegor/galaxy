@@ -6,11 +6,11 @@ export type BrandDocument = HydratedDocument<Brand>;
 
 @Schema()
 export class Brand extends Document {
-  @ApiProperty({
-    example: 'Samsung'
-  })
-  @Prop()
-  name: string;
+    @ApiProperty({
+        example: 'Samsung'
+    })
+    @Prop()
+    name: string;
 }
 
 export const BrandSchema = SchemaFactory.createForClass(Brand);

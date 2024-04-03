@@ -4,7 +4,7 @@ export type JwtPayload = {
     email: string;
     roles: string[];
     isBanned: boolean;
-}
+};
 
 export enum Role {
     USER = 'USER',

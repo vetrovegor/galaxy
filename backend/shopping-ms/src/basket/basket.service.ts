@@ -9,9 +9,12 @@ export class BasketService {
     constructor(
         @InjectModel(Basket) private readonly basketModel: typeof Basket,
         private readonly productService: ProductService
-    ) { }
+    ) {}
 
-    async addProduct({ productId, quantity }: BasketProductDto, userId: string) {
+    async addProduct(
+        { productId, quantity }: BasketProductDto,
+        userId: string
+    ) {
         await this.productService.findById(productId);
 
         const existedBasketItem = await this.basketModel.findOne({
@@ -19,7 +22,11 @@ export class BasketService {
         });
 
         if (!existedBasketItem) {
-            return await this.basketModel.create({ productId, userId, quantity });
+            return await this.basketModel.create({
+                productId,
+                userId,
+                quantity
+            });
         }
 
         existedBasketItem.quantity += quantity;

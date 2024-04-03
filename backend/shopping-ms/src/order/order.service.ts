@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Inject,
+    Injectable,
+    NotFoundException
+} from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -17,7 +22,7 @@ export class OrderService {
         private readonly basketService: BasketService,
         private readonly orderProductService: OrderProductService,
         private readonly rabbitMqService: RabbitMqService
-    ) { }
+    ) {}
 
     async getAll(userId: string) {
         const ordersData = await this.orderModel.findAll({
@@ -89,7 +94,8 @@ export class OrderService {
         const { street, floor, flat } = address;
 
         const currentDate = new Date();
-        const randomNumber = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;;
+        const randomNumber =
+            Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
         const tracking = `${currentDate.getFullYear()}${currentDate.getMonth()}${currentDate.getDate()}-${randomNumber}`;
 
         const order = await this.orderModel.create({
@@ -101,7 +107,8 @@ export class OrderService {
             flat
         });
 
-        const { totalSum, pictures, totalPictures } = await this.orderProductService.create(order.id, userId);
+        const { totalSum, pictures, totalPictures } =
+            await this.orderProductService.create(order.id, userId);
 
         return {
             id: order.id,

@@ -11,7 +11,7 @@ export class CommentService {
         @Inject(forwardRef(() => ReviewService))
         private readonly reviewService: ReviewService,
         private readonly userService: UserService
-    ) { }
+    ) {}
 
     async create(dto: CreateCommentDTO, userId: string) {
         dto.reviewId = Number(dto.reviewId);
@@ -31,18 +31,18 @@ export class CommentService {
         const offset = (page - 1) * limit;
 
         const totalCount = await this.prismaService.reviewComment.count({
-            where: { reviewId },
+            where: { reviewId }
         });
 
         const commentsData = await this.prismaService.reviewComment.findMany({
             take: limit,
             skip: offset,
             where: { reviewId },
-            orderBy: { date: 'desc' },
+            orderBy: { date: 'desc' }
         });
 
         const comments = await Promise.all(
-            commentsData.map(async review => {
+            commentsData.map(async (review) => {
                 const { userId, ...reviewDTO } = review;
 
                 const user = await this.userService.getById(userId);
@@ -50,7 +50,7 @@ export class CommentService {
                 return {
                     ...reviewDTO,
                     user
-                }
+                };
             })
         );
 

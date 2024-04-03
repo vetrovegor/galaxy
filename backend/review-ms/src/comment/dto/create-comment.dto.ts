@@ -1,5 +1,5 @@
-import { Transform } from "class-transformer";
-import { IsNumber, IsString, Length } from "class-validator";
+import { Transform } from 'class-transformer';
+import { IsNumber, IsString, Length } from 'class-validator';
 
 export class CreateCommentDTO {
     @Transform(({ value }) => Number(value))

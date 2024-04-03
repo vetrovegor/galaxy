@@ -1,5 +1,5 @@
-import { notificationsService } from "../notifications/notificationService";
-import { host } from "./axios";
+import { notificationsService } from '../notifications/notificationService';
+import { host } from './axios';
 
 class TypeService {
     async getTypes() {
@@ -7,16 +7,22 @@ class TypeService {
             const { data } = await host.get(`/product-ms/type`);
             return data;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification(error.response.data.message);
+            notificationsService.sendErrorResponseNotification(
+                error.response.data.message
+            );
         }
     }
-    
+
     async getTypeCharacteristics(typeId) {
         try {
-            const { data } = await host.get(`/product-ms/type/${typeId}/characteristic`);
+            const { data } = await host.get(
+                `/product-ms/type/${typeId}/characteristic`
+            );
             return data.characteristics;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification(error.response.data.message);
+            notificationsService.sendErrorResponseNotification(
+                error.response.data.message
+            );
         }
     }
 }

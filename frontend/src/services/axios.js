@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
@@ -14,8 +14,8 @@ export const authHost = axios.create({
 });
 
 authHost.interceptors.response.use(
-    response => response,
-    async error => {
+    (response) => response,
+    async (error) => {
         const originalRequest = error.config;
         const status = error.response.status;
 
@@ -24,11 +24,14 @@ authHost.interceptors.response.use(
                 console.log('Пришел 401/403 status code');
                 originalRequest._retry = true;
                 try {
-                    const { data } = await authHost.get('/user-ms/auth/refresh');
+                    const { data } = await authHost.get(
+                        '/user-ms/auth/refresh'
+                    );
                     const { accessToken } = data;
                     console.log('Пришел новый токен', accessToken);
                     localStorage.setItem('accessToken', accessToken);
-                    originalRequest.headers.Authorization = 'Bearer ' + accessToken;
+                    originalRequest.headers.Authorization =
+                        'Bearer ' + accessToken;
                     return authHost(originalRequest);
                 } catch (error) {
                     throw error;

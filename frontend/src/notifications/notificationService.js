@@ -1,15 +1,15 @@
-import { Slide, toast } from "react-toastify";
+import { Slide, toast } from 'react-toastify';
 
 const options = {
-    position: "bottom-right",
+    position: 'bottom-right',
     autoClose: 3000,
     hideProgressBar: true,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: "light",
-    transition: Slide,
+    theme: 'light',
+    transition: Slide
 };
 
 class NotificationsService {
@@ -18,13 +18,11 @@ class NotificationsService {
             messages = [messages];
         }
 
-        messages.forEach(message =>
-            toast.error(message, options)
-        );
+        messages.forEach((message) => toast.error(message, options));
     }
 
     sendSuccessNotification(message) {
-        toast.success(message, options)
+        toast.success(message, options);
     }
 }
 

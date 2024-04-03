@@ -6,12 +6,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ProductModule } from '@product/product.module';
 
 @Module({
-  imports: [
-    SequelizeModule.forFeature([Basket]),
-    ProductModule
-  ],
-  controllers: [BasketController],
-  providers: [BasketService],
-  exports: [BasketService],
+    imports: [SequelizeModule.forFeature([Basket]), ProductModule],
+    controllers: [BasketController],
+    providers: [BasketService],
+    exports: [BasketService]
 })
-export class BasketModule { }
+export class BasketModule {}

@@ -1,35 +1,39 @@
-import { notificationsService } from "../notifications/notificationService";
-import { authHost, host } from "./axios";
+import { notificationsService } from '../notifications/notificationService';
+import { authHost, host } from './axios';
 
 class AuthService {
     async register(nickname, email, password) {
         try {
-            const { data } = await host.post(
-                `/user-ms/auth/register`, {
+            const { data } = await host.post(`/user-ms/auth/register`, {
                 nickname,
                 email,
                 password
             });
-            
-            notificationsService.sendSuccessNotification('Вы успешно зарегистрировались! Вам на почту отправлена ссылка для подтверждения аккаунта');
+
+            notificationsService.sendSuccessNotification(
+                'Вы успешно зарегистрировались! Вам на почту отправлена ссылка для подтверждения аккаунта'
+            );
 
             return data;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification(error.response.data.message);
+            notificationsService.sendErrorResponseNotification(
+                error.response.data.message
+            );
         }
     }
 
     async login(nickname, password, onError) {
         try {
-            const { data } = await host.post(
-                `/user-ms/auth/login`, {
+            const { data } = await host.post(`/user-ms/auth/login`, {
                 nickname,
                 password
             });
 
             return data;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification(error.response.data.message);
+            notificationsService.sendErrorResponseNotification(
+                error.response.data.message
+            );
         }
     }
 
@@ -38,7 +42,9 @@ class AuthService {
             const { data } = await host.get(`/user-ms/auth/logout`);
             return data;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification(error.response.data.message);
+            notificationsService.sendErrorResponseNotification(
+                error.response.data.message
+            );
         }
     }
 

@@ -8,13 +8,13 @@ export class ProductService {
     constructor(
         @Inject('PRODUCT_SERVICE') private readonly productClient: ClientProxy,
         private readonly rabbitMqService: RabbitMqService
-    ) { }
+    ) {}
 
     async findById(productId: string) {
         const product: ProductDto = await this.rabbitMqService.sendRequest({
             client: this.productClient,
             pattern: 'get_product',
-            data: {productId},
+            data: { productId },
             timeoutDuration: 1250
         });
 

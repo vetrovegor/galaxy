@@ -1,7 +1,13 @@
-import { IsArray, IsNotEmpty, IsPositive, IsString, ValidateNested } from "class-validator";
-import { Transform, Type } from "class-transformer";
-import { IsExists } from "@shared/validation/is-exists.decorator";
-import { IsObjectId } from "@shared/validation/is-object-id.decorator";
+import {
+    IsArray,
+    IsNotEmpty,
+    IsPositive,
+    IsString,
+    ValidateNested
+} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsExists } from '@shared/validation/is-exists.decorator';
+import { IsObjectId } from '@shared/validation/is-object-id.decorator';
 
 export class CharacteristicDto {
     @IsString()
@@ -15,7 +21,7 @@ export class CreateProductDTO {
     @IsString()
     @IsNotEmpty()
     model: string;
-    
+
     @IsString()
     @IsNotEmpty()
     desc: string;

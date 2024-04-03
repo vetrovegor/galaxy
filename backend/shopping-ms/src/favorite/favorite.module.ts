@@ -6,11 +6,8 @@ import { Favorite } from './favorite.entity';
 import { ProductModule } from '@product/product.module';
 
 @Module({
-  imports: [
-    SequelizeModule.forFeature([Favorite]),
-    ProductModule
-  ],
-  controllers: [FavoriteController],
-  providers: [FavoriteService],
+    imports: [SequelizeModule.forFeature([Favorite]), ProductModule],
+    controllers: [FavoriteController],
+    providers: [FavoriteService]
 })
-export class FavoriteModule { }
+export class FavoriteModule {}

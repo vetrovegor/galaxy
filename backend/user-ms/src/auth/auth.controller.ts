@@ -25,7 +25,7 @@ export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly configService: ConfigService
-    ) { }
+    ) {}
 
     @Post('register')
     async register(
@@ -44,7 +44,7 @@ export class AuthController {
         res.json({
             user,
             accessToken
-        })
+        });
     }
 
     @Post('login')
@@ -67,7 +67,7 @@ export class AuthController {
         res.json({
             ...userShortInfo,
             accessToken
-        })
+        });
     }
 
     @Get('verify/:code')
@@ -79,9 +79,10 @@ export class AuthController {
     ) {
         const success = await this.authService.verify(code);
 
-        res.redirect(success
-            ? this.configService.get('VERIFIED_CLIENT_URL')
-            : this.configService.get('NOTFOUND_CLIENT_URL')
+        res.redirect(
+            success
+                ? this.configService.get('VERIFIED_CLIENT_URL')
+                : this.configService.get('NOTFOUND_CLIENT_URL')
         );
     }
 
@@ -101,7 +102,7 @@ export class AuthController {
             httpOnly: true
         });
 
-        res.json({ accessToken: tokens.accessToken })
+        res.json({ accessToken: tokens.accessToken });
     }
 
     @Get('logout')

@@ -1,0 +1,15 @@
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    &__textarea {
+        width: 100%;
+    }
+
+    &__btn {
+        padding: 12px 20px;
+        border-radius: 21px;
+    }
+}

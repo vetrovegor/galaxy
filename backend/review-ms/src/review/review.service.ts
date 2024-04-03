@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
+import {
+    Inject,
+    Injectable,
+    NotFoundException,
+    forwardRef
+} from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { CreateReviewDTO } from './dto/create-review.dto';
 import { ClientProxy } from '@nestjs/microservices';
@@ -22,7 +27,7 @@ export class ReviewService {
         private readonly commentService: CommentService,
         private readonly userService: UserService,
         private readonly rabbitMqService: RabbitMqService
-    ) { }
+    ) {}
 
     async getById(id: number) {
         const review = await this.prismaService.review.findFirst({
@@ -60,12 +65,13 @@ export class ReviewService {
         });
 
         const createdImages = await Promise.all(
-            images.map(async image => {
+            images.map(async (image) => {
                 const fileName = await this.fileService.saveFile(image);
 
-                const createdImage = await this.prismaService.reviewImage.create({
-                    data: { url: fileName, reviewId: createdReview.id }
-                });
+                const createdImage =
+                    await this.prismaService.reviewImage.create({
+                        data: { url: fileName, reviewId: createdReview.id }
+                    });
 
                 return {
                     id: createdImage.id,
@@ -94,7 +100,9 @@ export class ReviewService {
             where: { productId }
         });
 
-        const avgRating = avgRatingData._avg.rate ? Number(avgRatingData._avg.rate.toFixed(2)) : 0;
+        const avgRating = avgRatingData._avg.rate
+            ? Number(avgRatingData._avg.rate.toFixed(2))
+            : 0;
 
         return { avgRating, reviewsCount };
     }
@@ -120,11 +128,11 @@ export class ReviewService {
             take: limit,
             skip: offset,
             where: { productId },
-            orderBy: { date: 'desc' },
+            orderBy: { date: 'desc' }
         });
 
         const reviews = await Promise.all(
-            reviewsData.map(async review => {
+            reviewsData.map(async (review) => {
                 const { id, productId, userId, ...reviewDTO } = review;
 
                 const user = await this.userService.getById(userId);
@@ -142,7 +150,7 @@ export class ReviewService {
                     user,
                     ...stats,
                     commentsCount,
-                    images: images.map(image => ({
+                    images: images.map((image) => ({
                         id: image.id,
                         url: `${this.configService.get('API_URL')}/${image.url}`
                     }))
@@ -165,10 +173,10 @@ export class ReviewService {
             },
             include: {
                 images: true
-            },
+            }
         });
 
-        const images = reviews.flatMap(review =>
+        const images = reviews.flatMap((review) =>
             review.images.map(({ id, url }) => ({
                 id,
                 url: `${this.configService.get('API_URL')}/${url}`

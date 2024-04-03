@@ -23,7 +23,7 @@ import { JwtAuthGuard } from '@auth/guards';
 @ApiBearerAuth()
 @Controller()
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {}
 
     @Get('me')
     async me(@CurrentUser() user: JwtPayload) {

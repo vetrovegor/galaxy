@@ -1,12 +1,17 @@
 import { Public } from '@auth/public.decorator';
-import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import {
+    Controller,
+    DefaultValuePipe,
+    Get,
+    Param,
+    ParseIntPipe,
+    Query
+} from '@nestjs/common';
 import { ReviewService } from 'src/review/review.service';
 
 @Controller('product')
 export class ProductController {
-    constructor(
-        private readonly reviewService: ReviewService
-    ) { }
+    constructor(private readonly reviewService: ReviewService) {}
 
     @Public()
     @Get(':productId/image')

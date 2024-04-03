@@ -10,7 +10,7 @@ export class Basket extends Model {
 
     @Column({ field: 'user_id' })
     userId: string;
-    
+
     @Column({ field: 'product_id' })
     productId: string;
 }

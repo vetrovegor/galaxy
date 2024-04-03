@@ -7,13 +7,13 @@ import { ProductModule } from '@product/product.module';
 import { AuthModule } from '@auth/auth.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Type.name, schema: TypeSchema }]),
-    AuthModule,
-    forwardRef(() => ProductModule),
-  ],
-  controllers: [TypeController],
-  providers: [TypeService],
-  exports: [TypeService]
+    imports: [
+        MongooseModule.forFeature([{ name: Type.name, schema: TypeSchema }]),
+        AuthModule,
+        forwardRef(() => ProductModule)
+    ],
+    controllers: [TypeController],
+    providers: [TypeService],
+    exports: [TypeService]
 })
 export class TypeModule {}

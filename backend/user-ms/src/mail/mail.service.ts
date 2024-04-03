@@ -15,7 +15,7 @@ export class MailService {
     async sendVerificationMail(user: User) {
         try {
             const code = await this.codeService.saveVerificationCode(user);
-    
+
             await this.mailerService.sendMail({
                 from: process.env.SMTP_USER,
                 to: user.email,
@@ -26,7 +26,7 @@ export class MailService {
                             <a href="${this.configService.get('API_URL')}/auth/verify/${code}">Ссылка</a>
                         </div>
                     `
-            });            
+            });
         } catch (error) {
             console.log(error);
         }

@@ -7,17 +7,17 @@ export type TypeDocument = HydratedDocument<Type>;
 
 @Schema()
 export class Type extends Document {
-  @ApiProperty({
-    example: 'Samsung'
-  })
-  @Prop()
-  name: string;
+    @ApiProperty({
+        example: 'Samsung'
+    })
+    @Prop()
+    name: string;
 
-  @ApiProperty({
-    example: ['Диагональ экрана']
-  })
-  @Prop({ type: [{ type: String }] })
-  characteristics: string[];
+    @ApiProperty({
+        example: ['Диагональ экрана']
+    })
+    @Prop({ type: [{ type: String }] })
+    characteristics: string[];
 }
 
 export const TypeSchema = SchemaFactory.createForClass(Type);

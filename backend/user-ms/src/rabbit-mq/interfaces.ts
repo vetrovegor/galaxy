@@ -1,4 +1,4 @@
-import { ClientProxy } from "@nestjs/microservices";
+import { ClientProxy } from '@nestjs/microservices';
 
 export interface Options {
     client: ClientProxy;

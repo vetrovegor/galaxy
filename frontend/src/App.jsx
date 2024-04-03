@@ -1,73 +1,70 @@
-import React, { useEffect, useState } from "react";
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
-import Main from "./pages/Main/Main";
-import Auth from "./pages/Auth/Auth";
-import Profile from "./pages/Profile/Prodile";
-import Admin from "./pages/Admin/Admin";
-import Protected from "./pages/Protected/Protected";
+import React, { useEffect, useState } from 'react';
+import {
+    Navigate,
+    RouterProvider,
+    createBrowserRouter
+} from 'react-router-dom';
+import Main from './pages/Main/Main';
+import Auth from './pages/Auth/Auth';
+import Profile from './pages/Profile/Prodile';
+import Admin from './pages/Admin/Admin';
+import Protected from './pages/Protected/Protected';
 import './App.scss';
-import useUserStore from "./stores/userStore";
-import { authService } from "./services/authService";
-import NoAuth from "./pages/NoAuth/NoAuth";
-import Product from "./pages/Product/Product";
-import NotFound from "./pages/NotFound/NotFound";
-import { ToastContainer } from "react-toastify";
+import useUserStore from './stores/userStore';
+import { authService } from './services/authService';
+import NoAuth from './pages/NoAuth/NoAuth';
+import Product from './pages/Product/Product';
+import NotFound from './pages/NotFound/NotFound';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AdminType from "./pages/Admin/AdminType";
-import AdminBrand from "./pages/Admin/AdminBrand";
-import AdminProduct from "./pages/Admin/AdminProduct";
-import { healthService } from "./services/healthService";
-import Error from "./pages/Error/Error";
-import useFavoriteStore from "./stores/favoriteStore";
-import Favorite from "./pages/Favorite/Favorite";
+import AdminType from './pages/Admin/AdminType';
+import AdminBrand from './pages/Admin/AdminBrand';
+import AdminProduct from './pages/Admin/AdminProduct';
+import { healthService } from './services/healthService';
+import Error from './pages/Error/Error';
+import useFavoriteStore from './stores/favoriteStore';
+import Favorite from './pages/Favorite/Favorite';
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: '/',
         element: <Main />,
         errorElement: <Navigate to="/404" />
     },
     {
-        path: "/auth",
+        path: '/auth',
         element: <NoAuth compontent={Auth} />
-
     },
     {
-        path: "/profile",
+        path: '/profile',
         element: <Protected compontent={Profile} />
-
     },
     {
-        path: "/favorites",
+        path: '/favorites',
         element: <Protected compontent={Favorite} />
-
     },
     {
-        path: "/admin",
+        path: '/admin',
         element: <Protected compontent={Admin} role="ADMIN" />
-
     },
     {
-        path: "/admin/types",
+        path: '/admin/types',
         element: <Protected compontent={AdminType} role="ADMIN" />
-
     },
     {
-        path: "/admin/brands",
+        path: '/admin/brands',
         element: <Protected compontent={AdminBrand} role="ADMIN" />
-
     },
     {
-        path: "/admin/products",
+        path: '/admin/products',
         element: <Protected compontent={AdminProduct} role="ADMIN" />
-
     },
     {
-        path: "/product/:productId",
+        path: '/product/:productId',
         element: <Product />
     },
     {
-        path: "/404",
+        path: '/404',
         element: <NotFound />
     }
 ]);

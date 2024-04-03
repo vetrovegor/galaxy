@@ -9,7 +9,7 @@ export class FavoriteService {
     constructor(
         @InjectModel(Favorite) private readonly favoriteModel: typeof Favorite,
         private readonly productService: ProductService
-    ) { }
+    ) {}
 
     async toggle({ productId }: ToggleFavoriteDto, userId: string) {
         const existedFavorite = await this.favoriteModel.findOne({
@@ -48,6 +48,6 @@ export class FavoriteService {
             where: { userId }
         });
 
-        return favorites.map(item => item.productId);
+        return favorites.map((item) => item.productId);
     }
 }

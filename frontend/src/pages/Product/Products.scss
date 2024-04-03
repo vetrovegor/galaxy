@@ -1,5 +1,4 @@
 .product-page {
-
     &__inner {
         width: 100%;
         display: flex;
@@ -39,7 +38,7 @@
 
     &__buy-block {
         width: 100%;
-        background-color: #F7FAFA;
+        background-color: #f7fafa;
         padding: 16px;
         border-radius: 8px;
         display: flex;
@@ -66,7 +65,7 @@
     &__change-count {
         color: var(--primaryColor);
         padding: 10px;
-        
+
         &.disabled {
             pointer-events: none;
             opacity: 0.25;
@@ -164,11 +163,11 @@
         }
 
         &:nth-child(even) {
-            background-color: #F7FAFA;
+            background-color: #f7fafa;
         }
 
         &:nth-child(odd) {
-            background-color: #DADBE0;
+            background-color: #dadbe0;
         }
     }
 }

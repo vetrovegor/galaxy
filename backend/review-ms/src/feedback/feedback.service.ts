@@ -9,7 +9,7 @@ export class FeedbackService {
         private readonly prismaService: PrismaService,
         @Inject(forwardRef(() => ReviewService))
         private readonly reviewService: ReviewService
-    ) { }
+    ) {}
 
     async toggleReaction(reviewId: number, userId: string, isLike: boolean) {
         await this.reviewService.getById(reviewId);

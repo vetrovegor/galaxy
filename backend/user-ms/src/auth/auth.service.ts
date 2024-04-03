@@ -27,17 +27,18 @@ export class AuthService {
         private readonly jwtService: JwtService,
         @InjectRepository(Token)
         private tokenRepository: Repository<Token>
-    ) { }
+    ) {}
 
     async register(dto: RegisterDTO, userAgent: string) {
         const { email, nickname, password } = dto;
 
-        const existedUser = await this.userService.findByEmailOrNickname(nickname, email);
+        const existedUser = await this.userService.findByEmailOrNickname(
+            nickname,
+            email
+        );
 
         if (existedUser) {
-            throw new ConflictException(
-                'Пользователь уже существует'
-            );
+            throw new ConflictException('Пользователь уже существует');
         }
 
         const hashedPassword = hashSync(password, 3);
@@ -67,7 +68,8 @@ export class AuthService {
     async login(dto: LoginDTO, userAgent: string) {
         const { nickname, password } = dto;
 
-        const existedUser = await this.userService.findByEmailOrNickname(nickname);
+        const existedUser =
+            await this.userService.findByEmailOrNickname(nickname);
 
         if (!existedUser || !compareSync(password, existedUser.password)) {
             throw new UnauthorizedException('Неверная почта или пароль');
@@ -78,7 +80,8 @@ export class AuthService {
             userAgent
         );
 
-        const userShortInfo = await this.userService.createShortInfo(existedUser);
+        const userShortInfo =
+            await this.userService.createShortInfo(existedUser);
 
         return {
             userShortInfo,

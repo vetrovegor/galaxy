@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as path from 'path'
+import * as path from 'path';
 import * as fs from 'fs';
 
 @Injectable()
@@ -18,7 +18,10 @@ export class FileService {
 
             return fileName;
         } catch (e) {
-            throw new HttpException('Произошла ошибка при записи файла', HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException(
+                'Произошла ошибка при записи файла',
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
     }
 }

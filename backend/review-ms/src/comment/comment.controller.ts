@@ -6,10 +6,13 @@ import { JwtPayload } from '@auth/types';
 
 @Controller('comment')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) { }
+    constructor(private readonly commentService: CommentService) {}
 
-  @Post()
-  async create(@Body() dto: CreateCommentDTO, @CurrentUser() user: JwtPayload) {
-    return await this.commentService.create(dto, user.id);
-  }
+    @Post()
+    async create(
+        @Body() dto: CreateCommentDTO,
+        @CurrentUser() user: JwtPayload
+    ) {
+        return await this.commentService.create(dto, user.id);
+    }
 }

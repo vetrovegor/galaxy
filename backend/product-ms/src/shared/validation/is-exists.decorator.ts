@@ -8,7 +8,7 @@ export type IsExistsConstraintInput = {
 
 export function IsExists(
     options: IsExistsConstraintInput,
-    validationOptions?: ValidationOptions,
+    validationOptions?: ValidationOptions
 ) {
     return function (object: any, propertyName: string) {
         registerDecorator({
@@ -17,7 +17,7 @@ export function IsExists(
             propertyName: propertyName,
             options: validationOptions,
             constraints: [options],
-            validator: IsExistsConstraint,
+            validator: IsExistsConstraint
         });
     };
 }

@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RefreshResponse {
     @ApiProperty({ description: 'Токен доступа', example: 'token' })

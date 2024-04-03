@@ -1,23 +1,24 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Address } from "./address.entity";
-import { CreateAddressDTO } from "./dto/create-address.dto";
-import { UserService } from "@user/user.service";
-import { GetAddressRequestDTO } from "./dto/get-address-request.dto";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Address } from './address.entity';
+import { CreateAddressDTO } from './dto/create-address.dto';
+import { UserService } from '@user/user.service';
+import { GetAddressRequestDTO } from './dto/get-address-request.dto';
 
 @Injectable()
 export class AddressService {
     constructor(
-        @InjectRepository(Address) private readonly addressRepository: Repository<Address>,
+        @InjectRepository(Address)
+        private readonly addressRepository: Repository<Address>,
         private readonly userService: UserService
-    ) { }
+    ) {}
 
     async findAll(userId: string) {
         const address = await this.addressRepository.find({
             where: {
                 user: { id: userId }
-            },
+            }
         });
 
         return { address };
@@ -26,9 +27,13 @@ export class AddressService {
     async create(dto: CreateAddressDTO, userId: string) {
         const existedUser = await this.userService.findById(userId);
 
-        const createdAddress = this.addressRepository.create({ ...dto, user: existedUser });
+        const createdAddress = this.addressRepository.create({
+            ...dto,
+            user: existedUser
+        });
 
-        const { user, ...address } = await this.addressRepository.save(createdAddress);
+        const { user, ...address } =
+            await this.addressRepository.save(createdAddress);
 
         return address;
     }

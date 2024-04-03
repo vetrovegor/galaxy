@@ -3,7 +3,7 @@ import { ProductController } from './product.controller';
 import { ReviewModule } from '@review/review.module';
 
 @Module({
-  imports: [ReviewModule],
-  controllers: [ProductController]
+    imports: [ReviewModule],
+    controllers: [ProductController]
 })
-export class ProductModule { }
+export class ProductModule {}

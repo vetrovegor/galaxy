@@ -14,15 +14,15 @@ export enum Role {
     name: 'users'
 })
 export class User {
-    @ApiProperty({description: 'Идентификатор', example: '234'})
+    @ApiProperty({ description: 'Идентификатор', example: '234' })
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ApiProperty({description: 'Никнейм', example: 'l4ndar'})
+    @ApiProperty({ description: 'Никнейм', example: 'l4ndar' })
     @Column()
     nickname: string;
 
-    @ApiProperty({description: 'Почта', example: 'test@mail.ru'})
+    @ApiProperty({ description: 'Почта', example: 'test@mail.ru' })
     @Column()
     email: string;
 
@@ -30,21 +30,21 @@ export class User {
     @Exclude()
     password: string;
 
-    @ApiProperty({description: 'Верифицирован', example: 'false'})
+    @ApiProperty({ description: 'Верифицирован', example: 'false' })
     @Column({
         name: 'is_verified',
         default: false
     })
     isVerified: boolean;
 
-    @ApiProperty({description: 'Забанен', example: 'false'})
+    @ApiProperty({ description: 'Забанен', example: 'false' })
     @Column({
         name: 'is_banned',
         default: false
     })
     isBanned: boolean;
 
-    @ApiProperty({description: 'Роли', example: ['USER']})
+    @ApiProperty({ description: 'Роли', example: ['USER'] })
     @Column({
         type: 'enum',
         enum: Role,

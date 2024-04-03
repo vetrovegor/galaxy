@@ -25,5 +25,5 @@ export class Order extends Model {
     flat: number;
 
     @HasMany(() => OrderProduct)
-    products: OrderProduct[]
+    products: OrderProduct[];
 }

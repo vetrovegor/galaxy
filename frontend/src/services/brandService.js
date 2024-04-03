@@ -1,5 +1,5 @@
-import { notificationsService } from "../notifications/notificationService";
-import { authHost, host } from "./axios";
+import { notificationsService } from '../notifications/notificationService';
+import { authHost, host } from './axios';
 
 class BrandService {
     async getBrands() {
@@ -7,22 +7,25 @@ class BrandService {
             const { data } = await host.get(`/product-ms/brand`);
             return data;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification(error.response.data.message);
+            notificationsService.sendErrorResponseNotification(
+                error.response.data.message
+            );
         }
     }
 
     async createBrand(name) {
         try {
-            const response = await authHost.post(
-                `/product-ms/brand`, {
+            const response = await authHost.post(`/product-ms/brand`, {
                 name
             });
-            
+
             notificationsService.sendSuccessNotification('Бренд создан');
 
             return response;
         } catch (error) {
-            notificationsService.sendErrorResponseNotification(error.response.data.message);
+            notificationsService.sendErrorResponseNotification(
+                error.response.data.message
+            );
         }
     }
 }

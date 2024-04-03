@@ -4,9 +4,9 @@ import { JwtPayload } from './types';
 export const CurrentUser = createParamDecorator(
     (
         key: keyof JwtPayload,
-        ctx: ExecutionContext,
+        ctx: ExecutionContext
     ): JwtPayload | Partial<JwtPayload> => {
         const request = ctx.switchToHttp().getRequest();
         return key ? request.user[key] : request.user;
-    },
+    }
 );

@@ -5,12 +5,9 @@ import { ReviewModule } from '@review/review.module';
 import { UserModule } from '@user/user.module';
 
 @Module({
-  imports: [
-    forwardRef(() => ReviewModule),
-    UserModule
-  ],
-  controllers: [CommentController],
-  providers: [CommentService],
-  exports: [CommentService]
+    imports: [forwardRef(() => ReviewModule), UserModule],
+    controllers: [CommentController],
+    providers: [CommentService],
+    exports: [CommentService]
 })
-export class CommentModule { }
+export class CommentModule {}

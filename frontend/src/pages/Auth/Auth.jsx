@@ -1,15 +1,15 @@
-import React, { useState } from "react"
-import "./Auth.scss";
-import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../../services/authService";
-import { useMutation } from "react-query";
-import useUserStore from "../../stores/userStore";
-import Layout from "../Layout/Layout";
-import useFavoriteStore from "../../stores/favoriteStore";
+import React, { useState } from 'react';
+import './Auth.scss';
+import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '../../services/authService';
+import { useMutation } from 'react-query';
+import useUserStore from '../../stores/userStore';
+import Layout from '../Layout/Layout';
+import useFavoriteStore from '../../stores/favoriteStore';
 
 const Auth = () => {
-    const {login} = useUserStore();
-    const {init} = useFavoriteStore();
+    const { login } = useUserStore();
+    const { init } = useFavoriteStore();
 
     const [isLogin, setIsLogin] = useState(true);
 
@@ -28,7 +28,8 @@ const Auth = () => {
 
     const { mutate: loginMutate, isLoading: loginIsLoading } = useMutation({
         mutationKey: ['login'],
-        mutationFn: () => authService.login(loginData.nickname, loginData.password),
+        mutationFn: () =>
+            authService.login(loginData.nickname, loginData.password),
         onSuccess(data) {
             if (data) {
                 login(data.user);
@@ -39,22 +40,28 @@ const Auth = () => {
         }
     });
 
-    const { mutate: registerMutate, isLoading: registerIsLoading } = useMutation({
-        mutationKey: ['register'],
-        mutationFn: () => authService.register(registerData.nickname, registerData.email, registerData.password),
-        onSuccess(data) {
-            if (data) {
-                login(data.user);
-                navigate('/');
+    const { mutate: registerMutate, isLoading: registerIsLoading } =
+        useMutation({
+            mutationKey: ['register'],
+            mutationFn: () =>
+                authService.register(
+                    registerData.nickname,
+                    registerData.email,
+                    registerData.password
+                ),
+            onSuccess(data) {
+                if (data) {
+                    login(data.user);
+                    navigate('/');
+                }
             }
-        }
-    });
+        });
 
     return (
         <Layout>
             <div className="auth">
-                {isLogin
-                    ? <div className="auth__form">
+                {isLogin ? (
+                    <div className="auth__form">
                         <h1 className="title">Вход</h1>
                         <div className="inputs">
                             <div className="input-wrapper">
@@ -67,12 +74,14 @@ const Auth = () => {
                                     maxLength={24}
                                     required
                                     value={loginData.nickname}
-                                    onChange={(e) => setLoginData(prev => {
-                                        return {
-                                            ...prev,
-                                            nickname: e.target.value
-                                        }
-                                    })}
+                                    onChange={(e) =>
+                                        setLoginData((prev) => {
+                                            return {
+                                                ...prev,
+                                                nickname: e.target.value
+                                            };
+                                        })
+                                    }
                                 />
                             </div>
                             <div className="input-wrapper">
@@ -85,22 +94,35 @@ const Auth = () => {
                                     maxLength={16}
                                     required
                                     value={loginData.password}
-                                    onChange={(e) => setLoginData(prev => {
-                                        return {
-                                            ...prev,
-                                            password: e.target.value
-                                        }
-                                    })}
+                                    onChange={(e) =>
+                                        setLoginData((prev) => {
+                                            return {
+                                                ...prev,
+                                                password: e.target.value
+                                            };
+                                        })
+                                    }
                                 />
                             </div>
                         </div>
-                        <button onClick={loginMutate} className={`btn auth__btn${loginIsLoading ? " disabled" : ""}`}>Вход</button>
+                        <button
+                            onClick={loginMutate}
+                            className={`btn auth__btn${loginIsLoading ? ' disabled' : ''}`}
+                        >
+                            Вход
+                        </button>
                         <div className="auth__text item">
                             Нет аккаунта?
-                            <button onClick={() => setIsLogin(false)} className="auth__text-btn main-color">Регистрация</button>
+                            <button
+                                onClick={() => setIsLogin(false)}
+                                className="auth__text-btn main-color"
+                            >
+                                Регистрация
+                            </button>
                         </div>
                     </div>
-                    : <div className="auth__form">
+                ) : (
+                    <div className="auth__form">
                         <h1 className="title">Регистрация</h1>
                         <div className="auth__inputs">
                             <div className="input-wrapper">
@@ -113,12 +135,14 @@ const Auth = () => {
                                     maxLength={24}
                                     required
                                     value={registerData.nickname}
-                                    onChange={(e) => setRegisterData(prev => {
-                                        return {
-                                            ...prev,
-                                            nickname: e.target.value
-                                        }
-                                    })}
+                                    onChange={(e) =>
+                                        setRegisterData((prev) => {
+                                            return {
+                                                ...prev,
+                                                nickname: e.target.value
+                                            };
+                                        })
+                                    }
                                 />
                             </div>
                             <div className="input-wrapper">
@@ -129,12 +153,14 @@ const Auth = () => {
                                     className="input"
                                     required
                                     value={registerData.email}
-                                    onChange={(e) => setRegisterData(prev => {
-                                        return {
-                                            ...prev,
-                                            email: e.target.value
-                                        }
-                                    })}
+                                    onChange={(e) =>
+                                        setRegisterData((prev) => {
+                                            return {
+                                                ...prev,
+                                                email: e.target.value
+                                            };
+                                        })
+                                    }
                                 />
                             </div>
                             <div className="input-wrapper">
@@ -147,25 +173,37 @@ const Auth = () => {
                                     maxLength={16}
                                     required
                                     value={registerData.password}
-                                    onChange={(e) => setRegisterData(prev => {
-                                        return {
-                                            ...prev,
-                                            password: e.target.value
-                                        }
-                                    })}
+                                    onChange={(e) =>
+                                        setRegisterData((prev) => {
+                                            return {
+                                                ...prev,
+                                                password: e.target.value
+                                            };
+                                        })
+                                    }
                                 />
                             </div>
                         </div>
-                        <button onClick={registerMutate} className={`btn auth__btn${registerIsLoading ? " disabled" : ""}`}>Регистрация</button>
+                        <button
+                            onClick={registerMutate}
+                            className={`btn auth__btn${registerIsLoading ? ' disabled' : ''}`}
+                        >
+                            Регистрация
+                        </button>
                         <div className="auth__text item">
                             Есть аккаунт?
-                            <button onClick={() => setIsLogin(true)} className="auth__text-btn main-color">Вход</button>
+                            <button
+                                onClick={() => setIsLogin(true)}
+                                className="auth__text-btn main-color"
+                            >
+                                Вход
+                            </button>
                         </div>
                     </div>
-                }
+                )}
             </div>
         </Layout>
-    )
+    );
 };
 
 export default Auth;

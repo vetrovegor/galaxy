@@ -15,10 +15,10 @@ import 'dotenv/config';
                 password: configService.get('DB_PASSWORD'),
                 synchronize: configService.get('DB_SYNC'),
                 models: [__dirname + '/**/*.entity.{js,ts}'],
-                autoLoadModels: true,
+                autoLoadModels: true
             }),
             inject: [ConfigService]
         })
     ]
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

@@ -5,11 +5,8 @@ import { OrderProduct } from './order-product.entity';
 import { BasketModule } from '@basket/basket.module';
 
 @Module({
-  imports: [
-    SequelizeModule.forFeature([OrderProduct]),
-    BasketModule
-  ],
-  providers: [OrderProductService],
-  exports: [OrderProductService],
+    imports: [SequelizeModule.forFeature([OrderProduct]), BasketModule],
+    providers: [OrderProductService],
+    exports: [OrderProductService]
 })
-export class OrderProductModule { }
+export class OrderProductModule {}

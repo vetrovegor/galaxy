@@ -7,19 +7,22 @@ import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('favorite')
 export class FavoriteController {
-  constructor(private readonly favoriteService: FavoriteService) { }
-  @Post()
-  async toggle(@Body() dto: ToggleFavoriteDto, @CurrentUser() user: JwtPayload) {
-    return await this.favoriteService.toggle(dto, user.id);
-  }
+    constructor(private readonly favoriteService: FavoriteService) {}
+    @Post()
+    async toggle(
+        @Body() dto: ToggleFavoriteDto,
+        @CurrentUser() user: JwtPayload
+    ) {
+        return await this.favoriteService.toggle(dto, user.id);
+    }
 
-  @Get()
-  async findAll(@CurrentUser() user: JwtPayload) {
-    return await this.favoriteService.findAll(user.id);
-  }
+    @Get()
+    async findAll(@CurrentUser() user: JwtPayload) {
+        return await this.favoriteService.findAll(user.id);
+    }
 
-  @MessagePattern('get_favorites')
-  async findIds(data: { userId: string }) {
-    return await this.favoriteService.findIds(data.userId);
-  }
+    @MessagePattern('get_favorites')
+    async findIds(data: { userId: string }) {
+        return await this.favoriteService.findIds(data.userId);
+    }
 }

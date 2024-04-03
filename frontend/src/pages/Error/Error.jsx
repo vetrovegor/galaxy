@@ -1,5 +1,5 @@
-import { BugFixing } from "../../components/Icons/BugFixing";
-import "./Error.scss";
+import { BugFixing } from '../../components/Icons/BugFixing';
+import './Error.scss';
 
 const Error = () => {
     return (
@@ -7,7 +7,7 @@ const Error = () => {
             <BugFixing width={512} />
             <h1 className="title">Тех работы</h1>
         </div>
-    )
+    );
 };
 
 export default Error;

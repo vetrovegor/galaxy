@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 const useFavoriteStore = create((set) => ({
     favorites: [],
@@ -6,7 +6,9 @@ const useFavoriteStore = create((set) => ({
     toggle: (id) => {
         set((state) => {
             if (state.favorites?.includes(id)) {
-                return { favorites: state.favorites.filter(itemId => itemId !== id) };
+                return {
+                    favorites: state.favorites.filter((itemId) => itemId !== id)
+                };
             } else {
                 return { favorites: [...state.favorites, id] };
             }
@@ -14,6 +16,5 @@ const useFavoriteStore = create((set) => ({
     },
     clear: () => set({ favorites: [] })
 }));
-
 
 export default useFavoriteStore;

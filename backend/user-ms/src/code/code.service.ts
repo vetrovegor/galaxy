@@ -10,7 +10,7 @@ export class CodeService {
     constructor(
         @InjectRepository(Code)
         private codeRepository: Repository<Code>
-    ) { }
+    ) {}
 
     async saveVerificationCode(user: User) {
         let codeData = await this.codeRepository.findOne({

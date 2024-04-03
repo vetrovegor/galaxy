@@ -28,4 +28,4 @@ import { MailModule } from 'src/mail/mail.module';
         TypeOrmModule.forFeature([Token])
     ]
 })
-export class AuthModule { }
+export class AuthModule {}
