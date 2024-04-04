@@ -2,23 +2,20 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import './Products.scss';
 import { productService } from '../../services/productService';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { reviewService } from '../../services/reviewService';
 import Review from '../../components/Review/Review';
 import Layout from '../Layout/Layout';
-import { Rate, Skeleton } from 'antd';
+import { Image, Rate, Skeleton } from 'antd';
 import useUserStore from '../../stores/userStore';
 import useFavoriteStore from '../../stores/favoriteStore';
 import { favoriteService } from '../../services/favoriteService';
-import Popup from '../../components/Popup/Popup';
 import ReviewPopup from '../../components/ReviewPopup/ReviewPopup';
 
 const Product = () => {
-    const queryClient = useQueryClient();
-
     const { productId } = useParams();
 
-    const { data: product, isLoading: productLoading } = useQuery({
+    const { data: product } = useQuery({
         queryKey: ['product'],
         queryFn: () => productService.getProductById(productId)
     });
@@ -42,25 +39,48 @@ const Product = () => {
     const [count, setCount] = useState(1);
     const [openReviews, setOpenReviews] = useState(false);
     const [reviewImages, setReviewImages] = useState([]);
-    const [reviewsData, setReviewsData] = useState(null);
+    const [reviewsData, setReviewsData] = useState({
+        elementsCount: 0,
+        isLastPage: true,
+        reviews: [],
+        totalCount: 0
+    });
     const [openReviewPopup, setOpenReviewPopup] = useState(false);
+
+    const { refetch: reviewImagesRefetch } = useQuery({
+        queryKey: ['reviewImages'],
+        queryFn: () => reviewService.getProductReviewImages(productId),
+        refetchOnWindowFocus: false,
+        enabled: false,
+        onSuccess(data) {
+            setReviewImages(data);
+        }
+    });
+
+    const { refetch: reviewsDataRefetch } = useQuery({
+        queryKey: ['reviews'],
+        queryFn: () => reviewService.getProductReviews(productId),
+        refetchOnWindowFocus: false,
+        enabled: false,
+        onSuccess(data) {
+            setReviewsData(data);
+        }
+    });
+
+    const loadReviewsAndReviewImages = () => {
+        reviewImagesRefetch();
+        reviewsDataRefetch();
+    };
 
     const handleReviewsBtnClick = async () => {
         setOpenReviews(true);
 
-        if (product.stats && !reviewsData) {
-            const reviewImages = await queryClient.fetchQuery({
-                queryKey: ['reviews'],
-                queryFn: () => reviewService.getProductReviewImages(productId)
-            });
-
-            const reviewsData = await queryClient.fetchQuery({
-                queryKey: ['reviews'],
-                queryFn: () => reviewService.getProductReviews(productId)
-            });
-
-            setReviewImages(reviewImages);
-            setReviewsData(reviewsData);
+        if (
+            product.stats &&
+            reviewImages.length == 0 &&
+            reviewsData.reviews.length == 0
+        ) {
+            loadReviewsAndReviewImages();
         }
     };
 
@@ -316,79 +336,95 @@ const Product = () => {
                                 </div>
                             </div>
                         ) : (
-                            <div className="product-tabs__content">
-                                <div className="product-tabs__title">
-                                    <p className="title">Отзывы</p>
-                                    <button
-                                        onClick={handlePpenReviewPopup}
-                                        className="product-page__add-basket item btn"
-                                    >
-                                        Оставить отзыв
-                                        <svg
-                                            width={24}
-                                            height={24}
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth="1.5"
-                                            stroke="currentColor"
+                            <>
+                                <div className="product-tabs__content">
+                                    <div className="product-tabs__title">
+                                        <p className="title">Отзывы</p>
+                                        <button
+                                            onClick={handlePpenReviewPopup}
+                                            className="product-page__add-basket item btn"
                                         >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                                {product?.stats ? (
-                                    product.stats.reviewsCount > 0 ? (
-                                        <div className="reviews">
-                                            {reviewImages.length > 0 && (
-                                                <div className="reviews__images">
-                                                    {reviewImages.map(
-                                                        (image) => (
-                                                            <div
-                                                                key={image.id}
-                                                                className="reviews__image ibg"
-                                                            >
-                                                                <img
-                                                                    src={
-                                                                        image.url
-                                                                    }
-                                                                    alt="image"
-                                                                />
-                                                            </div>
+                                            Оставить отзыв
+                                            <svg
+                                                width={24}
+                                                height={24}
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth="1.5"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    {product?.stats ? (
+                                        product.stats.reviewsCount > 0 ? (
+                                            <div className="reviews">
+                                                {reviewImages.length > 0 && (
+                                                    <div className="reviews__images">
+                                                        <Image.PreviewGroup>
+                                                            {reviewImages.map(
+                                                                (image) => (
+                                                                    <Image
+                                                                        key={
+                                                                            image.id
+                                                                        }
+                                                                        width={
+                                                                            100
+                                                                        }
+                                                                        src={
+                                                                            image.url
+                                                                        }
+                                                                        style={{
+                                                                            aspectRatio:
+                                                                                '1/1',
+                                                                            objectFit:
+                                                                                'cover',
+                                                                            borderRadius: 8
+                                                                        }}
+                                                                    />
+                                                                )
+                                                            )}
+                                                        </Image.PreviewGroup>
+                                                    </div>
+                                                )}
+                                                <div className="reviews__list">
+                                                    {reviewsData.reviews.map(
+                                                        (review) => (
+                                                            <Review
+                                                                key={review.id}
+                                                                review={review}
+                                                            />
                                                         )
                                                     )}
                                                 </div>
-                                            )}
-                                            <div className="reviews__list">
-                                                {reviewsData?.reviews.map(
-                                                    (review) => (
-                                                        <Review
-                                                            key={review.id}
-                                                            review={review}
-                                                        />
-                                                    )
-                                                )}
                                             </div>
-                                        </div>
+                                        ) : (
+                                            <>Отзывов никто не оставлял</>
+                                        )
                                     ) : (
-                                        <>Отзывов никто не оставлял</>
-                                    )
-                                ) : (
-                                    <>Произошла оишбка при загрузке отзывов</>
-                                )}
-                            </div>
+                                        <>
+                                            Произошла оишбка при загрузке
+                                            отзывов
+                                        </>
+                                    )}
+                                </div>
+                                <ReviewPopup
+                                    productId={product?._id}
+                                    active={openReviewPopup}
+                                    setActive={setOpenReviewPopup}
+                                    updateReviews={loadReviewsAndReviewImages}
+                                />
+                            </>
                         )}
                     </div>
                 </div>
             </Layout>
-            <ReviewPopup
-                active={openReviewPopup}
-                setActive={setOpenReviewPopup}
-            />
         </>
     );
 };

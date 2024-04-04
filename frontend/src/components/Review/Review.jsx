@@ -3,7 +3,7 @@ import './Review.scss';
 import { reviewService } from '../../services/reviewService';
 import { useQueryClient } from 'react-query';
 import { formatDate } from '../../utils/date';
-import { Skeleton } from 'antd';
+import { Image, Skeleton } from 'antd';
 import CommentForm from '../CommentForm/CommentForm';
 
 const Review = ({ review }) => {
@@ -52,12 +52,12 @@ const Review = ({ review }) => {
     };
 
     const insertComment = (comment) => {
-        console.log({newComms: [...commentsData.comments, comment]});
+        console.log({ newComms: [...commentsData.comments, comment] });
         setCommentsData((prev) => ({
             ...prev,
             comments: [comment, ...prev.comments]
         }));
-    }
+    };
 
     useEffect(() => {
         if (commentsPage > 1) {
@@ -111,11 +111,20 @@ const Review = ({ review }) => {
             <p className="bold">Комментарий</p>
             <p className="text">{comment}</p>
             <div className="reviews__images">
-                {images.map((image) => (
-                    <div key={image.id} className="reviews__image ibg">
-                        <img src={image.url} alt="image" />
-                    </div>
-                ))}
+                <Image.PreviewGroup>
+                    {images.map((image) => (
+                        <Image
+                            key={image.id}
+                            width={125}
+                            src={image.url}
+                            style={{
+                                aspectRatio: '1/1',
+                                objectFit: 'cover',
+                                borderRadius: 8
+                            }}
+                        />
+                    ))}
+                </Image.PreviewGroup>
             </div>
             <div className="review__block">
                 <button

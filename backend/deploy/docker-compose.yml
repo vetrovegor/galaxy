@@ -12,7 +12,6 @@ services:
   user-ms-db:
     image: postgres:16
     container_name: user-ms-db
-    # убрать на продакшене
     ports:
       - 5433:5432
     environment:
@@ -25,7 +24,6 @@ services:
   product-ms-db:
     image: mongo
     container_name: product-ms-db
-    # убрать на продакшене
     ports:
       - 27017:27017
     environment:
@@ -42,22 +40,80 @@ services:
       - MYSQL_ROOT_PASSWORD=admin
       # переименовать на review-ms-db
       - MYSQL_DATABASE=product-ms-db
-    # убрать на продакшене
     ports:
       - 3306:3306
     volumes:
       - ./review-ms-db:/var/lib/mysql
     restart: unless-stopped
 
+  # исправить ошибку в названии
   shoppng-ms-db:
     image: mariadb
     container_name: shoppng-ms-db
     environment:
       - MARIADB_DATABASE=shoppng-ms-db
       - MARIADB_ROOT_PASSWORD=root
-    # убрать на продакшене
     ports:
       - 3307:3306
     volumes:
       - ./shoppng-ms-db:/var/lib/mysql
     restart: unless-stopped
+
+  # api-gateway:
+  #   build:
+  #     context: ../api-gateway
+  #   container_name: api-gateway
+  #   ports:
+  #     - "8080:8080"
+  #   env_file: ../api-gateway/.env
+  #   volumes:
+  #     - ../api-gateway/src:/app/src
+  #   restart: unless-stopped
+
+  # user-ms:
+  #   build:
+  #     context: ../user-ms
+  #   container_name: user-ms
+  #   env_file: ../user-ms/.env
+  #   depends_on:
+  #     - rabbitmq
+  #     - user-ms-db
+  #   volumes:
+  #     - ../user-ms/src:/app/src
+  #   restart: unless-stopped
+
+  # product-ms:
+  #   build:
+  #     context: ../product-ms
+  #   container_name: product-ms
+  #   env_file: ../product-ms/.env
+  #   depends_on:
+  #     - rabbitmq
+  #     - product-ms-db
+  #   volumes:
+  #     - ../product-ms/src:/app/src
+  #   restart: unless-stopped
+
+  # review-ms:
+  #   build:
+  #     context: ../review-ms
+  #   container_name: review-ms
+  #   env_file: ../review-ms/.env
+  #   depends_on:
+  #     - rabbitmq
+  #     - review-ms-db
+  #   volumes:
+  #     - ../review-ms/src:/app/src
+  #   restart: unless-stopped
+
+  # shopping-ms:
+  #   build:
+  #     context: ../shopping-ms
+  #   container_name: shopping-ms
+  #   env_file: ../shopping-ms/.env
+  #   depends_on:
+  #     - rabbitmq
+  #     - shoppng-ms-db
+  #   volumes:
+  #     - ../shopping-ms/src:/app/src
+  #   restart: unless-stopped

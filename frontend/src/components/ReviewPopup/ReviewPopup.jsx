@@ -1,16 +1,21 @@
 import { useState } from 'react';
 import Popup from '../Popup/Popup';
-import { Rate } from 'antd';
+import { Rate, Upload } from 'antd';
 import './ReviewPopup.scss';
+import { PlusOutlined } from '@ant-design/icons';
+import { reviewService } from '../../services/reviewService';
 
-const ReviewPopup = ({ active, setActive }) => {
-
-    const [info, setInfo] = useState({
+const ReviewPopup = ({ productId, active, setActive, updateReviews }) => {
+    const infoDefaultValue = {
+        productId,
         rate: 0,
         advantages: '',
         disadvantages: '',
-        comment: ''
-    });
+        comment: '',
+        images: []
+    };
+
+    const [info, setInfo] = useState(infoDefaultValue);
 
     const changeInfo = (key, value) => {
         setInfo((prev) => ({
@@ -20,7 +25,28 @@ const ReviewPopup = ({ active, setActive }) => {
     };
 
     const writeReview = async () => {
-        console.log({info});
+        const { productId, rate, advantages, disadvantages, comment, images } =
+            info;
+
+        const formData = new FormData();
+
+        formData.append('productId', productId);
+        formData.append('rate', rate);
+        formData.append('advantages', advantages);
+        formData.append('disadvantages', disadvantages);
+        formData.append('comment', comment);
+
+        images.forEach(({originFileObj}) => {
+            formData.append('images', originFileObj);
+        });
+
+        const success = await reviewService.writeReview(formData);
+
+        if (success) {
+            setInfo(infoDefaultValue);
+            updateReviews();
+            setActive(false);
+        }
     };
 
     return (
@@ -46,7 +72,9 @@ const ReviewPopup = ({ active, setActive }) => {
                 <p className="placeholder">Недостатки</p>
                 <textarea
                     value={info.disadvantages}
-                    onChange={(e) => changeInfo('disadvantages', e.target.value)}
+                    onChange={(e) =>
+                        changeInfo('disadvantages', e.target.value)
+                    }
                     className="textarea"
                     placeholder="Недостатки"
                 ></textarea>
@@ -60,6 +88,19 @@ const ReviewPopup = ({ active, setActive }) => {
                     placeholder="Комментарий"
                 ></textarea>
             </div>
+            <Upload
+                listType="picture-card"
+                accept=".png,.jpeg,.jpg"
+                multiple
+                fileList={info.images}
+                onChange={({ fileList }) => changeInfo('images', fileList)}
+                beforeUpload={() => false}
+            >
+                <button style={{ border: 0, background: 'none' }} type="button">
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                </button>
+            </Upload>
             <button onClick={writeReview} className="btn popup__btn">
                 Отправить
             </button>
