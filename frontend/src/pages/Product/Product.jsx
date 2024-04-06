@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import './Products.scss';
 import { productService } from '../../services/productService';
@@ -38,6 +38,7 @@ const Product = () => {
 
     const [count, setCount] = useState(1);
     const [openReviews, setOpenReviews] = useState(false);
+    const [openReviewPopup, setOpenReviewPopup] = useState(false);
     const [reviewImages, setReviewImages] = useState([]);
     const [reviewsData, setReviewsData] = useState({
         elementsCount: 0,
@@ -45,7 +46,6 @@ const Product = () => {
         reviews: [],
         totalCount: 0
     });
-    const [openReviewPopup, setOpenReviewPopup] = useState(false);
 
     const { refetch: reviewImagesRefetch } = useQuery({
         queryKey: ['reviewImages'],
@@ -84,12 +84,26 @@ const Product = () => {
         }
     };
 
-    const handlePpenReviewPopup = () => {
+    const handleOpenReviewPopup = () => {
         if (!user) {
             return navigate('/auth');
         }
 
         setOpenReviewPopup(true);
+    };
+
+    const addReviewToTop = (review) => {
+        setReviewsData((prev) => ({
+            ...prev,
+            reviews: [review, ...prev.reviews]
+        }));
+
+        const {images} = review;
+
+        setReviewImages(prev => [
+            ...images,
+            ...prev
+        ]);
     };
 
     return (
@@ -341,7 +355,7 @@ const Product = () => {
                                     <div className="product-tabs__title">
                                         <p className="title">Отзывы</p>
                                         <button
-                                            onClick={handlePpenReviewPopup}
+                                            onClick={handleOpenReviewPopup}
                                             className="product-page__add-basket item btn"
                                         >
                                             Оставить отзыв
@@ -418,7 +432,7 @@ const Product = () => {
                                     productId={product?._id}
                                     active={openReviewPopup}
                                     setActive={setOpenReviewPopup}
-                                    updateReviews={loadReviewsAndReviewImages}
+                                    addReviewToTop={addReviewToTop}
                                 />
                             </>
                         )}

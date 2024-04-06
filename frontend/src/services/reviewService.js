@@ -49,11 +49,11 @@ class ReviewService {
 
     async writeReview(dto) {
         try {
-            const { status } = await authHost.post(`/review-ms/review`, dto);
+            const { data } = await authHost.post(`/review-ms/review`, dto);
 
             notificationsService.sendSuccessNotification('Отзыв оставлен!');
 
-            return status == 201;
+            return data;
         } catch (error) {
             notificationsService.sendErrorResponseNotification(
                 error.response.data.message
@@ -63,7 +63,7 @@ class ReviewService {
 
     async writeComment(reviewId, comment) {
         try {
-            const { status } = await authHost.post(`/review-ms/comment`, {
+            const { data } = await authHost.post(`/review-ms/comment`, {
                 reviewId,
                 comment
             });
@@ -72,7 +72,7 @@ class ReviewService {
                 'Комментарий оставлен!'
             );
 
-            return status;
+            return data;
         } catch (error) {
             notificationsService.sendErrorResponseNotification(
                 error.response.data.message

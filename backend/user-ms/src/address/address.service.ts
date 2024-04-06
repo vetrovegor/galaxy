@@ -35,7 +35,7 @@ export class AddressService {
         const { user, ...address } =
             await this.addressRepository.save(createdAddress);
 
-        return address;
+        return { address };
     }
 
     async delete(id: string, userId: string) {

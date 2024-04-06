@@ -1,0 +1,26 @@
+.profile {
+
+    &__columns {
+        width: 100%;
+        display: flex;
+        gap: 40px;
+    }
+
+    &__column {
+        width: calc(50% - 20px);
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    &__addresses {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    &__btn {
+        padding: 13px;
+        border-radius: 22px;
+    }
+}

@@ -3,7 +3,7 @@ import './Review.scss';
 import { reviewService } from '../../services/reviewService';
 import { useQueryClient } from 'react-query';
 import { formatDate } from '../../utils/date';
-import { Image, Skeleton } from 'antd';
+import { Rate, Image, Skeleton } from 'antd';
 import CommentForm from '../CommentForm/CommentForm';
 
 const Review = ({ review }) => {
@@ -11,6 +11,7 @@ const Review = ({ review }) => {
         id,
         user,
         date,
+        rate,
         advantages,
         disadvantages,
         comment,
@@ -51,8 +52,7 @@ const Review = ({ review }) => {
         }
     };
 
-    const insertComment = (comment) => {
-        console.log({ newComms: [...commentsData.comments, comment] });
+    const addCommentToTop = (comment) => {
         setCommentsData((prev) => ({
             ...prev,
             comments: [comment, ...prev.comments]
@@ -104,6 +104,7 @@ const Review = ({ review }) => {
                 </div>
                 <p className="dim">{formatDate(date)}</p>
             </div>
+            <Rate disabled defaultValue={rate} allowHalf />
             <p className="bold">Достоинства</p>
             <p className="text">{advantages}</p>
             <p className="bold">Недостатки</p>
@@ -196,7 +197,7 @@ const Review = ({ review }) => {
                 </div>
             </div>
             <div className={`review__comments${dropdownOpen ? ' active' : ''}`}>
-                <CommentForm reviewId={id} insertComment={insertComment} />
+                <CommentForm reviewId={id} addCommentToTop={addCommentToTop} />
                 {commentsData?.comments.map((comment) => (
                     <div key={comment.id} className="review__comment">
                         <div className="review__block">

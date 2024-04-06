@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../components/Sidebar/Sidebar';
 import { useQuery, useQueryClient } from 'react-query';
 import { productService } from '../../services/productService';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Main.scss';
 import Layout from '../Layout/Layout';
 import { typeService } from '../../services/typeService';
 import Product from '../../components/Product/Product';
 import { Pagination } from 'antd';
-import useFavoriteStore from '../../stores/favoriteStore';
 
 const Main = () => {
     const queryClient = useQueryClient();

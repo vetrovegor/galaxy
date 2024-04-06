@@ -6,7 +6,6 @@ import {
 } from 'react-router-dom';
 import Main from './pages/Main/Main';
 import Auth from './pages/Auth/Auth';
-import Profile from './pages/Profile/Prodile';
 import Admin from './pages/Admin/Admin';
 import Protected from './pages/Protected/Protected';
 import './App.scss';
@@ -24,6 +23,7 @@ import { healthService } from './services/healthService';
 import Error from './pages/Error/Error';
 import useFavoriteStore from './stores/favoriteStore';
 import Favorite from './pages/Favorite/Favorite';
+import Profile from './pages/Profile/Profile';
 
 const router = createBrowserRouter([
     {

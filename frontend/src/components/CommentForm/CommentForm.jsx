@@ -3,9 +3,8 @@ import useUserStore from '../../stores/userStore';
 import './CommentForm.scss';
 import { reviewService } from '../../services/reviewService';
 import { useState } from 'react';
-import { formatDate } from '../../utils/date';
 
-const CommentForm = ({ reviewId, insertComment }) => {
+const CommentForm = ({ reviewId, addCommentToTop }) => {
     const { user } = useUserStore();
     const navigate = useNavigate();
     const [comment, setComment] = useState('');
@@ -15,16 +14,16 @@ const CommentForm = ({ reviewId, insertComment }) => {
             return navigate('/auth');
         }
 
-        const status = await reviewService.writeComment(reviewId, comment);
+        const data = await reviewService.writeComment(reviewId, comment);
 
-        if (status == 201) {
-            const now = Date.now();
+        if (data) {
+            const { id, reviewId, comment, date } = data;
 
-            insertComment({
-                id: now,
+            addCommentToTop({
+                id,
                 reviewId,
                 comment,
-                date: formatDate(now),
+                date,
                 user: { id: user.id, nickname: user.nickname }
             });
 

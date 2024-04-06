@@ -4,8 +4,11 @@ import { Rate, Upload } from 'antd';
 import './ReviewPopup.scss';
 import { PlusOutlined } from '@ant-design/icons';
 import { reviewService } from '../../services/reviewService';
+import useUserStore from '../../stores/userStore';
 
-const ReviewPopup = ({ productId, active, setActive, updateReviews }) => {
+const ReviewPopup = ({ productId, active, setActive, addReviewToTop }) => {
+    const { user } = useUserStore();
+
     const infoDefaultValue = {
         productId,
         rate: 0,
@@ -36,15 +39,18 @@ const ReviewPopup = ({ productId, active, setActive, updateReviews }) => {
         formData.append('disadvantages', disadvantages);
         formData.append('comment', comment);
 
-        images.forEach(({originFileObj}) => {
+        images.forEach(({ originFileObj }) => {
             formData.append('images', originFileObj);
         });
 
-        const success = await reviewService.writeReview(formData);
+        const { review } = await reviewService.writeReview(formData);
 
-        if (success) {
+        if (review) {
             setInfo(infoDefaultValue);
-            updateReviews();
+            addReviewToTop({
+                ...review,
+                user
+            });
             setActive(false);
         }
     };
