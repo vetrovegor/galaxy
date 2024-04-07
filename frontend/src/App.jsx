@@ -24,6 +24,8 @@ import Error from './pages/Error/Error';
 import useFavoriteStore from './stores/favoriteStore';
 import Favorite from './pages/Favorite/Favorite';
 import Profile from './pages/Profile/Profile';
+import Basket from './pages/Basket/Basket';
+import useBasketStore from './stores/basketStore';
 
 const router = createBrowserRouter([
     {
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
     {
         path: '/favorites',
         element: <Protected compontent={Favorite} />
+    },
+    {
+        path: '/basket',
+        element: <Protected compontent={Basket} />
     },
     {
         path: '/admin',
@@ -74,12 +80,13 @@ export function App() {
     const [loading, setLoading] = useState(true);
 
     const { login } = useUserStore();
-    const { init } = useFavoriteStore();
+    const { init: initFavorites } = useFavoriteStore();
+    const { init: initBasket } = useBasketStore();
 
     const initialize = async () => {
-        const status = await healthService.checkHealth();
+        const health = await healthService.checkHealth();
 
-        if (status != 200) {
+        if (!health) {
             return setError(true);
         }
 
@@ -90,7 +97,8 @@ export function App() {
         const userData = await authService.getUserShortInfo();
 
         login(userData?.user);
-        init(userData?.favorites);
+        initFavorites(userData?.favorites);
+        initBasket(userData?.basket);
 
         return setLoading(false);
     };

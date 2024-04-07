@@ -43,13 +43,7 @@ export class BasketService {
             throw new NotFoundException('Продукт не найден');
         }
 
-        if (existedBasketItem.quantity == 1) {
-            return await existedBasketItem.destroy();
-        }
-
-        existedBasketItem.quantity--;
-
-        return await existedBasketItem.save();
+        return await existedBasketItem.destroy();
     }
 
     async get(userId: string) {
@@ -65,11 +59,13 @@ export class BasketService {
                 const product = await this.productService.findById(productId);
 
                 productsQuantity += quantity;
-                totalSum += product.price * quantity;
+                const sum = product.price * quantity;
+                totalSum += sum;
 
                 return {
                     ...product,
-                    quantity
+                    quantity,
+                    sum
                 };
             })
         );

@@ -54,13 +54,13 @@ export class UserService {
             data: { userId: user.id }
         });
 
-        const bakset = await this.rabbitMqService.sendRequest({
+        const basket = await this.rabbitMqService.sendRequest({
             client: this.shoppingClient,
             pattern: 'get_basket',
             data: { userId: user.id }
         });
 
-        return { user, favorites, bakset };
+        return { user, favorites, basket };
     }
 
     async me(id: string) {

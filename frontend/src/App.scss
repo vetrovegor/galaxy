@@ -87,6 +87,9 @@ $safety: 20;
     max-width: #{$container + 2 * $safety}px;
     padding: 0 #{$safety + px};
     margin: 0 auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .ibg {

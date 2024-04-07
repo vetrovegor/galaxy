@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import './Products.scss';
 import { productService } from '../../services/productService';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 import { reviewService } from '../../services/reviewService';
 import Review from '../../components/Review/Review';
 import Layout from '../Layout/Layout';
@@ -11,6 +11,8 @@ import useUserStore from '../../stores/userStore';
 import useFavoriteStore from '../../stores/favoriteStore';
 import { favoriteService } from '../../services/favoriteService';
 import ReviewPopup from '../../components/ReviewPopup/ReviewPopup';
+import useBasketStore from '../../stores/basketStore';
+import { basketService } from '../../services/basketService';
 
 const Product = () => {
     const { productId } = useParams();
@@ -39,12 +41,33 @@ const Product = () => {
     const [count, setCount] = useState(1);
     const [openReviews, setOpenReviews] = useState(false);
     const [openReviewPopup, setOpenReviewPopup] = useState(false);
+    const [reviewPage, setReviewPage] = useState(1);
     const [reviewImages, setReviewImages] = useState([]);
     const [reviewsData, setReviewsData] = useState({
         elementsCount: 0,
         isLastPage: true,
         reviews: [],
         totalCount: 0
+    });
+
+    const { addProduct } = useBasketStore();
+
+    const { mutate: addToBasket } = useMutation({
+        mutationKey: ['add-product'],
+        mutationFn: () => basketService.addProduct(product._id, count),
+        onSuccess(success) {
+            if (success) {
+                addProduct(
+                    {
+                        _id: product._id,
+                        picture: product.picture,
+                        model: product.model,
+                        price: product.price
+                    },
+                    count
+                );
+            }
+        }
     });
 
     const { refetch: reviewImagesRefetch } = useQuery({
@@ -59,11 +82,14 @@ const Product = () => {
 
     const { refetch: reviewsDataRefetch } = useQuery({
         queryKey: ['reviews'],
-        queryFn: () => reviewService.getProductReviews(productId),
+        queryFn: () => reviewService.getProductReviews(productId, reviewPage),
         refetchOnWindowFocus: false,
         enabled: false,
         onSuccess(data) {
-            setReviewsData(data);
+            setReviewsData((prev) => ({
+                ...data,
+                reviews: [...prev.reviews, ...data.reviews]
+            }));
         }
     });
 
@@ -98,13 +124,16 @@ const Product = () => {
             reviews: [review, ...prev.reviews]
         }));
 
-        const {images} = review;
+        const { images } = review;
 
-        setReviewImages(prev => [
-            ...images,
-            ...prev
-        ]);
+        setReviewImages((prev) => [...images, ...prev]);
     };
+
+    useEffect(() => {
+        if (reviewPage > 1) {
+            reviewsDataRefetch();
+        }
+    }, [reviewPage]);
 
     return (
         <>
@@ -245,7 +274,10 @@ const Product = () => {
                                             </svg>
                                         </button>
                                     </div>
-                                    <button className="product-page__add-basket item btn">
+                                    <button
+                                        onClick={addToBasket}
+                                        className="product-page__add-basket item btn"
+                                    >
                                         В корзину
                                         <svg
                                             width={24}
@@ -417,6 +449,19 @@ const Product = () => {
                                                         )
                                                     )}
                                                 </div>
+                                                {!reviewsData.isLastPage && (
+                                                    <button
+                                                        onClick={() =>
+                                                            setReviewPage(
+                                                                (prev) =>
+                                                                    prev + 1
+                                                            )
+                                                        }
+                                                        className="main-color"
+                                                    >
+                                                        Показать еще
+                                                    </button>
+                                                )}
                                             </div>
                                         ) : (
                                             <>Отзывов никто не оставлял</>

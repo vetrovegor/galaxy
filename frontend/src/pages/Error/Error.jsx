@@ -5,7 +5,7 @@ const Error = () => {
     return (
         <div className="error-page">
             <BugFixing width={512} />
-            <h1 className="title">Тех работы</h1>
+            <h1 className="title">Ведутся технические работы</h1>
         </div>
     );
 };

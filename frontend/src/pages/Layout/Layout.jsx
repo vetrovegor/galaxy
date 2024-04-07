@@ -7,7 +7,7 @@ const Layout = ({ children, showSearch = false }) => {
         <div className="wrapper">
             <Header showSearch={showSearch} />
             <main className="main">
-                <div className="container main__container">{children}</div>
+                <div className="container">{children}</div>
             </main>
         </div>
     );

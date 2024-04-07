@@ -4,7 +4,7 @@ class HealthService {
     async checkHealth() {
         try {
             const { status } = await host.get('/health');
-            return status;
+            return status == 200;
         } catch (error) {
             console.log(error);
         }
